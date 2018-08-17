@@ -2,6 +2,18 @@
 
 
 [[projects]]
+  name = "github.com/davecgh/go-spew"
+  packages = ["spew"]
+  revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
+  version = "v1.1.1"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/kami-zh/go-capturer"
+  packages = ["."]
+  revision = "e492ea43421da7381e5200a2e22753bfc31347c2"
+
+[[projects]]
   name = "github.com/kelseyhightower/envconfig"
   packages = ["."]
   revision = "f611eb38b3875cc3bd991ca91c51d06446afa14c"
@@ -26,6 +38,12 @@
   revision = "9520e82c474b0a04dd04f8a40959027271bab992"
 
 [[projects]]
+  name = "github.com/pmezard/go-difflib"
+  packages = ["difflib"]
+  revision = "792786c7400a136282c1664665ae0a8db921c6c2"
+  version = "v1.0.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/sanity-io/litter"
   packages = ["."]
@@ -42,6 +60,15 @@
   packages = ["."]
   revision = "0280e33525f5d88edb71638a80b31724153225ba"
   version = "v1.0.0"
+
+[[projects]]
+  name = "github.com/stretchr/testify"
+  packages = [
+    "assert",
+    "require"
+  ]
+  revision = "f35b8ab0b5a2cef36673838d662e249dd9c94686"
+  version = "v1.2.2"
 
 [[projects]]
   name = "github.com/x-cray/logrus-prefixed-formatter"
@@ -73,6 +100,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "83cf70d194ce75dfd7dcce227346c55f9f8461cd4ac7303f081338b68cde8c01"
+  inputs-digest = "da39d8c3e26dfd144de86f69f662659a7d3cca95132c80a418cde05d0ea3accf"
   solver-name = "gps-cdcl"
   solver-version = 1
