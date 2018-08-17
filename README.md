@@ -1,0 +1,1 @@
+# lookout-gometalint-analyzer
