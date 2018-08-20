@@ -19,6 +19,7 @@ To install, do
 ```
 go get -u gopkg.in/alecthomas/gometalinter.v2
 ```
+This will also install a number of linter binaries, vendored by gometalinter.
 
 # Example of utilization
 
