@@ -12,7 +12,7 @@ jobs:
       before_script:
         - make packages
       script:
-        - ./build/bin/gometalint-analyzer ./fixtures | grep "15 issues found"
+        - ./build/bin/gometalint-analyzer ./_fixtures | grep "15 issues found"
     - name: "Generated code"
       before_install:
         - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
