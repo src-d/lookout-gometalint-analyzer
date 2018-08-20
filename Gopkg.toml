@@ -40,3 +40,8 @@
 [prune]
   go-tests = true
   unused-packages = true
+
+  [[prune.project]]
+     name = "github.com/gogo/protobuf"
+     non-go = false
+     unused-packages = false
