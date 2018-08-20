@@ -1,7 +1,7 @@
-FROM debian:stretch-slim
+FROM golang:1.10-alpine
 
-RUN apt-get update && apt-get install -y dumb-init
-
+RUN apk add --no-cache git dumb-init
+RUN go get -u gopkg.in/alecthomas/gometalinter.v2
 ADD ./build/bin/gometalint-analyzer /bin/gometalint-analyzer
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]

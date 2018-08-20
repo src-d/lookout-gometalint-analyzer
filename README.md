@@ -11,6 +11,15 @@ _Disclamer: this is not official product, but only serves the purpose of testing
 make packages
 ```
 
+# Dependencies
+
+Requires stable version of `gometalinter.v2` binary avabilable in PATH.
+
+To install, do
+```
+go get -u gopkg.in/alecthomas/gometalinter.v2
+```
+
 # Example of utilization
 
 With `lookout` binary from the latest release of [SDK](https://github.com/src-d/lookout/releases)
