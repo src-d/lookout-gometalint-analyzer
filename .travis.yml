@@ -2,3 +2,24 @@ language: go
 
 go:
   - "1.10.x"
+
+jobs:
+  include:
+    - name: "Unit tests"
+      stage: test
+      script: make test
+    - name: "Integration tests"
+      before_script:
+        - make packages
+      script:
+        - ./build/bin/gometalint-analyzer ./fixtures | grep "15 issues found"
+    - name: "Generated code"
+      before_install:
+        - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+      script:
+        - dep ensure -v
+        - make no-changes-in-commit
+        - make protogen
+        - make no-changes-in-commit
+        - make build
+        - make no-changes-in-commit
