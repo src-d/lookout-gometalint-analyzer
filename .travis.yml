@@ -8,11 +8,17 @@ jobs:
     - name: "Unit tests"
       stage: test
       script: make test
-    - name: "Integration tests"
+    - name: "Integration test: simple proxy"
+      before_install:
+        - go get -u gopkg.in/alecthomas/gometalinter.v2
+        - gometalinter.v2 --install
       before_script:
-        - make packages
+        - go build ./cmd/gometalint-proxy
       script:
-        - ./build/bin/gometalint-analyzer ./_fixtures | grep "15 issues found"
+        - ./gometalint-proxy ./_fixtures 2>&1 | tee -a proxy.log | grep "15 issues found"
+      after_failure:
+        - cat proxy.log
+        - gometalinter.v2 --disable-all --enable=dupl --enable=gas --enable=gofmt --enable=goimports --enable=lll --enable=misspell ./_fixtures
     - name: "Generated code"
       before_install:
         - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
