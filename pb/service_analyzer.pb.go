@@ -18,15 +18,51 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
+
 type EventResponse struct {
-	AnalyzerVersion string     `protobuf:"bytes,1,opt,name=analyzer_version,json=analyzerVersion,proto3" json:"analyzer_version,omitempty"`
-	Comments        []*Comment `protobuf:"bytes,2,rep,name=comments" json:"comments,omitempty"`
+	AnalyzerVersion      string     `protobuf:"bytes,1,opt,name=analyzer_version,json=analyzerVersion,proto3" json:"analyzer_version,omitempty"`
+	Comments             []*Comment `protobuf:"bytes,2,rep,name=comments" json:"comments,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
+	XXX_sizecache        int32      `json:"-"`
 }
 
-func (m *EventResponse) Reset()                    { *m = EventResponse{} }
-func (m *EventResponse) String() string            { return proto.CompactTextString(m) }
-func (*EventResponse) ProtoMessage()               {}
-func (*EventResponse) Descriptor() ([]byte, []int) { return fileDescriptorServiceAnalyzer, []int{0} }
+func (m *EventResponse) Reset()         { *m = EventResponse{} }
+func (m *EventResponse) String() string { return proto.CompactTextString(m) }
+func (*EventResponse) ProtoMessage()    {}
+func (*EventResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_service_analyzer_ac3b67a1685b91e3, []int{0}
+}
+func (m *EventResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *EventResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_EventResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *EventResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EventResponse.Merge(dst, src)
+}
+func (m *EventResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *EventResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_EventResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EventResponse proto.InternalMessageInfo
 
 // Comment is a comment on a commit or changeset.
 type Comment struct {
@@ -38,13 +74,43 @@ type Comment struct {
 	// Text of the comment.
 	Text string `protobuf:"bytes,3,opt,name=text,proto3" json:"text,omitempty"`
 	// Confidence in the comment. It should be an integer between 0 and 100.
-	Confidence uint32 `protobuf:"varint,4,opt,name=confidence,proto3" json:"confidence,omitempty"`
+	Confidence           uint32   `protobuf:"varint,4,opt,name=confidence,proto3" json:"confidence,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *Comment) Reset()                    { *m = Comment{} }
-func (m *Comment) String() string            { return proto.CompactTextString(m) }
-func (*Comment) ProtoMessage()               {}
-func (*Comment) Descriptor() ([]byte, []int) { return fileDescriptorServiceAnalyzer, []int{1} }
+func (m *Comment) Reset()         { *m = Comment{} }
+func (m *Comment) String() string { return proto.CompactTextString(m) }
+func (*Comment) ProtoMessage()    {}
+func (*Comment) Descriptor() ([]byte, []int) {
+	return fileDescriptor_service_analyzer_ac3b67a1685b91e3, []int{1}
+}
+func (m *Comment) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Comment) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Comment.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *Comment) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Comment.Merge(dst, src)
+}
+func (m *Comment) XXX_Size() int {
+	return m.Size()
+}
+func (m *Comment) XXX_DiscardUnknown() {
+	xxx_messageInfo_Comment.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Comment proto.InternalMessageInfo
 
 func init() {
 	proto.RegisterType((*EventResponse)(nil), "pb.EventResponse")
@@ -76,7 +142,7 @@ func NewAnalyzerClient(cc *grpc.ClientConn) AnalyzerClient {
 
 func (c *analyzerClient) NotifyReviewEvent(ctx context.Context, in *ReviewEvent, opts ...grpc.CallOption) (*EventResponse, error) {
 	out := new(EventResponse)
-	err := grpc.Invoke(ctx, "/pb.Analyzer/NotifyReviewEvent", in, out, c.cc, opts...)
+	err := c.cc.Invoke(ctx, "/pb.Analyzer/NotifyReviewEvent", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +151,7 @@ func (c *analyzerClient) NotifyReviewEvent(ctx context.Context, in *ReviewEvent,
 
 func (c *analyzerClient) NotifyPushEvent(ctx context.Context, in *PushEvent, opts ...grpc.CallOption) (*EventResponse, error) {
 	out := new(EventResponse)
-	err := grpc.Invoke(ctx, "/pb.Analyzer/NotifyPushEvent", in, out, c.cc, opts...)
+	err := c.cc.Invoke(ctx, "/pb.Analyzer/NotifyPushEvent", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -651,9 +717,11 @@ var (
 	ErrIntOverflowServiceAnalyzer   = fmt.Errorf("proto: integer overflow")
 )
 
-func init() { proto.RegisterFile("service_analyzer.proto", fileDescriptorServiceAnalyzer) }
+func init() {
+	proto.RegisterFile("service_analyzer.proto", fileDescriptor_service_analyzer_ac3b67a1685b91e3)
+}
 
-var fileDescriptorServiceAnalyzer = []byte{
+var fileDescriptor_service_analyzer_ac3b67a1685b91e3 = []byte{
 	// 306 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x90, 0xc1, 0x4e, 0x3a, 0x31,
 	0x10, 0xc6, 0x29, 0xf0, 0xff, 0x8b, 0x25, 0x04, 0x69, 0x8c, 0xd9, 0x70, 0x68, 0x36, 0x5c, 0x5c,

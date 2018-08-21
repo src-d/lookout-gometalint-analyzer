@@ -7,7 +7,7 @@ import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
 import _ "github.com/gogo/protobuf/gogoproto"
-import gopkg_in_bblfsh_sdk_v1_uast "gopkg.in/bblfsh/sdk.v1/uast"
+import uast "gopkg.in/bblfsh/sdk.v1/uast"
 
 import context "golang.org/x/net/context"
 import grpc "google.golang.org/grpc"
@@ -19,6 +19,12 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+// A compilation error at this line likely means your copy of the
+// proto package needs to be updated.
+const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
+
 type File struct {
 	// File path.
 	Path string `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"`
@@ -29,41 +35,131 @@ type File struct {
 	// Raw content of the file.
 	Content []byte `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
 	// UAST.
-	UAST *gopkg_in_bblfsh_sdk_v1_uast.Node `protobuf:"bytes,5,opt,name=uast" json:"uast,omitempty"`
+	UAST *uast.Node `protobuf:"bytes,5,opt,name=uast" json:"uast,omitempty"`
 	// Programming/data/markup language of the file.
-	Language string `protobuf:"bytes,6,opt,name=language,proto3" json:"language,omitempty"`
+	Language             string   `protobuf:"bytes,6,opt,name=language,proto3" json:"language,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *File) Reset()                    { *m = File{} }
-func (m *File) String() string            { return proto.CompactTextString(m) }
-func (*File) ProtoMessage()               {}
-func (*File) Descriptor() ([]byte, []int) { return fileDescriptorServiceData, []int{0} }
+func (m *File) Reset()         { *m = File{} }
+func (m *File) String() string { return proto.CompactTextString(m) }
+func (*File) ProtoMessage()    {}
+func (*File) Descriptor() ([]byte, []int) {
+	return fileDescriptor_service_data_6085d9db5a603f0d, []int{0}
+}
+func (m *File) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *File) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_File.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *File) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_File.Merge(dst, src)
+}
+func (m *File) XXX_Size() int {
+	return m.ProtoSize()
+}
+func (m *File) XXX_DiscardUnknown() {
+	xxx_messageInfo_File.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_File proto.InternalMessageInfo
 
 type Change struct {
-	Base *File `protobuf:"bytes,1,opt,name=base" json:"base,omitempty"`
-	Head *File `protobuf:"bytes,2,opt,name=head" json:"head,omitempty"`
+	Base                 *File    `protobuf:"bytes,1,opt,name=base" json:"base,omitempty"`
+	Head                 *File    `protobuf:"bytes,2,opt,name=head" json:"head,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *Change) Reset()                    { *m = Change{} }
-func (m *Change) String() string            { return proto.CompactTextString(m) }
-func (*Change) ProtoMessage()               {}
-func (*Change) Descriptor() ([]byte, []int) { return fileDescriptorServiceData, []int{1} }
+func (m *Change) Reset()         { *m = Change{} }
+func (m *Change) String() string { return proto.CompactTextString(m) }
+func (*Change) ProtoMessage()    {}
+func (*Change) Descriptor() ([]byte, []int) {
+	return fileDescriptor_service_data_6085d9db5a603f0d, []int{1}
+}
+func (m *Change) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Change) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Change.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *Change) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Change.Merge(dst, src)
+}
+func (m *Change) XXX_Size() int {
+	return m.ProtoSize()
+}
+func (m *Change) XXX_DiscardUnknown() {
+	xxx_messageInfo_Change.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Change proto.InternalMessageInfo
 
 type ChangesRequest struct {
-	Base            *ReferencePointer `protobuf:"bytes,1,opt,name=base" json:"base,omitempty"`
-	Head            *ReferencePointer `protobuf:"bytes,2,opt,name=head" json:"head,omitempty"`
-	IncludePattern  string            `protobuf:"bytes,3,opt,name=include_pattern,json=includePattern,proto3" json:"include_pattern,omitempty"`
-	ExcludePattern  string            `protobuf:"bytes,4,opt,name=exclude_pattern,json=excludePattern,proto3" json:"exclude_pattern,omitempty"`
-	ExcludeVendored bool              `protobuf:"varint,5,opt,name=exclude_vendored,json=excludeVendored,proto3" json:"exclude_vendored,omitempty"`
-	WantContents    bool              `protobuf:"varint,6,opt,name=want_contents,json=wantContents,proto3" json:"want_contents,omitempty"`
-	WantUAST        bool              `protobuf:"varint,7,opt,name=want_uast,json=wantUast,proto3" json:"want_uast,omitempty"`
-	WantLanguage    bool              `protobuf:"varint,8,opt,name=want_language,json=wantLanguage,proto3" json:"want_language,omitempty"`
+	Base                 *ReferencePointer `protobuf:"bytes,1,opt,name=base" json:"base,omitempty"`
+	Head                 *ReferencePointer `protobuf:"bytes,2,opt,name=head" json:"head,omitempty"`
+	IncludePattern       string            `protobuf:"bytes,3,opt,name=include_pattern,json=includePattern,proto3" json:"include_pattern,omitempty"`
+	ExcludePattern       string            `protobuf:"bytes,4,opt,name=exclude_pattern,json=excludePattern,proto3" json:"exclude_pattern,omitempty"`
+	ExcludeVendored      bool              `protobuf:"varint,5,opt,name=exclude_vendored,json=excludeVendored,proto3" json:"exclude_vendored,omitempty"`
+	WantContents         bool              `protobuf:"varint,6,opt,name=want_contents,json=wantContents,proto3" json:"want_contents,omitempty"`
+	WantUAST             bool              `protobuf:"varint,7,opt,name=want_uast,json=wantUast,proto3" json:"want_uast,omitempty"`
+	WantLanguage         bool              `protobuf:"varint,8,opt,name=want_language,json=wantLanguage,proto3" json:"want_language,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}          `json:"-"`
+	XXX_sizecache        int32             `json:"-"`
 }
 
-func (m *ChangesRequest) Reset()                    { *m = ChangesRequest{} }
-func (m *ChangesRequest) String() string            { return proto.CompactTextString(m) }
-func (*ChangesRequest) ProtoMessage()               {}
-func (*ChangesRequest) Descriptor() ([]byte, []int) { return fileDescriptorServiceData, []int{2} }
+func (m *ChangesRequest) Reset()         { *m = ChangesRequest{} }
+func (m *ChangesRequest) String() string { return proto.CompactTextString(m) }
+func (*ChangesRequest) ProtoMessage()    {}
+func (*ChangesRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_service_data_6085d9db5a603f0d, []int{2}
+}
+func (m *ChangesRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ChangesRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ChangesRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *ChangesRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ChangesRequest.Merge(dst, src)
+}
+func (m *ChangesRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *ChangesRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ChangesRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ChangesRequest proto.InternalMessageInfo
 
 type FilesRequest struct {
 	Revision        *ReferencePointer `protobuf:"bytes,1,opt,name=revision" json:"revision,omitempty"`
@@ -73,13 +169,43 @@ type FilesRequest struct {
 	WantContents    bool              `protobuf:"varint,5,opt,name=want_contents,json=wantContents,proto3" json:"want_contents,omitempty"`
 	WantUAST        bool              `protobuf:"varint,6,opt,name=want_uast,json=wantUast,proto3" json:"want_uast,omitempty"`
 	// WantLanguage set to true if UAST was requested
-	WantLanguage bool `protobuf:"varint,7,opt,name=want_language,json=wantLanguage,proto3" json:"want_language,omitempty"`
+	WantLanguage         bool     `protobuf:"varint,7,opt,name=want_language,json=wantLanguage,proto3" json:"want_language,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *FilesRequest) Reset()                    { *m = FilesRequest{} }
-func (m *FilesRequest) String() string            { return proto.CompactTextString(m) }
-func (*FilesRequest) ProtoMessage()               {}
-func (*FilesRequest) Descriptor() ([]byte, []int) { return fileDescriptorServiceData, []int{3} }
+func (m *FilesRequest) Reset()         { *m = FilesRequest{} }
+func (m *FilesRequest) String() string { return proto.CompactTextString(m) }
+func (*FilesRequest) ProtoMessage()    {}
+func (*FilesRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_service_data_6085d9db5a603f0d, []int{3}
+}
+func (m *FilesRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *FilesRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_FilesRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *FilesRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_FilesRequest.Merge(dst, src)
+}
+func (m *FilesRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *FilesRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_FilesRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_FilesRequest proto.InternalMessageInfo
 
 func init() {
 	proto.RegisterType((*File)(nil), "pb.File")
@@ -112,7 +238,7 @@ func NewDataClient(cc *grpc.ClientConn) DataClient {
 }
 
 func (c *dataClient) GetChanges(ctx context.Context, in *ChangesRequest, opts ...grpc.CallOption) (Data_GetChangesClient, error) {
-	stream, err := grpc.NewClientStream(ctx, &_Data_serviceDesc.Streams[0], c.cc, "/pb.Data/GetChanges", opts...)
+	stream, err := c.cc.NewStream(ctx, &_Data_serviceDesc.Streams[0], "/pb.Data/GetChanges", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -144,7 +270,7 @@ func (x *dataGetChangesClient) Recv() (*Change, error) {
 }
 
 func (c *dataClient) GetFiles(ctx context.Context, in *FilesRequest, opts ...grpc.CallOption) (Data_GetFilesClient, error) {
-	stream, err := grpc.NewClientStream(ctx, &_Data_serviceDesc.Streams[1], c.cc, "/pb.Data/GetFiles", opts...)
+	stream, err := c.cc.NewStream(ctx, &_Data_serviceDesc.Streams[1], "/pb.Data/GetFiles", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -805,7 +931,7 @@ func (m *File) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if m.UAST == nil {
-				m.UAST = &gopkg_in_bblfsh_sdk_v1_uast.Node{}
+				m.UAST = &uast.Node{}
 			}
 			if err := m.UAST.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
@@ -1557,9 +1683,9 @@ var (
 	ErrIntOverflowServiceData   = fmt.Errorf("proto: integer overflow")
 )
 
-func init() { proto.RegisterFile("service_data.proto", fileDescriptorServiceData) }
+func init() { proto.RegisterFile("service_data.proto", fileDescriptor_service_data_6085d9db5a603f0d) }
 
-var fileDescriptorServiceData = []byte{
+var fileDescriptor_service_data_6085d9db5a603f0d = []byte{
 	// 574 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x94, 0xcd, 0x6e, 0xd3, 0x40,
 	0x10, 0xc7, 0xb3, 0xa9, 0x9b, 0xb8, 0x9b, 0xb4, 0x54, 0xab, 0x1e, 0xac, 0x08, 0x25, 0x21, 0x1c,
