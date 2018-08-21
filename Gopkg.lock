@@ -28,8 +28,23 @@
     "ptypes/duration",
     "ptypes/timestamp"
   ]
-  revision = "b4deda0973fb4c70b50d226b1af49f3da59f5265"
-  version = "v1.1.0"
+  revision = "aa810b61a9c79d51363740d207bb46cf8e620ed5"
+  version = "v1.2.0"
+
+[[projects]]
+  name = "github.com/grpc-ecosystem/go-grpc-middleware"
+  packages = [
+    ".",
+    "logging"
+  ]
+  revision = "c250d6563d4d4c20252cd865923440e829844f4e"
+  version = "v1.0.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/jbenet/go-context"
+  packages = ["io"]
+  revision = "d14ea06fba99483203c19d92cfcd13ebe73135f4"
 
 [[projects]]
   branch = "master"
@@ -98,6 +113,15 @@
   version = "v1.0.0"
 
 [[projects]]
+  name = "github.com/src-d/lookout"
+  packages = [
+    ".",
+    "pb"
+  ]
+  revision = "58f789cbebe087cfe53e2d1daf0b1da4495f6366"
+  version = "v0.1.1"
+
+[[projects]]
   name = "github.com/stretchr/testify"
   packages = [
     "assert",
@@ -116,7 +140,7 @@
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
-  revision = "aabede6cba87e37f413b3e60ebfc214f8eeca1b0"
+  revision = "614d502a4dac94afa3a6ce146bd1736da82514c6"
 
 [[projects]]
   branch = "master"
@@ -130,7 +154,7 @@
     "internal/timeseries",
     "trace"
   ]
-  revision = "aaf60122140d3fcf75376d319f0554393160eb50"
+  revision = "922f4815f713f213882e8ef45e0d315b164d705c"
 
 [[projects]]
   branch = "master"
@@ -139,7 +163,7 @@
     "unix",
     "windows"
   ]
-  revision = "1c9583448a9c3aa0f9a6a5241bf73c0bd8aafded"
+  revision = "4ea2f632f6e912459fe60b26b1749377f0d889d5"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -208,6 +232,12 @@
   version = "v1.16.1"
 
 [[projects]]
+  name = "gopkg.in/sourcegraph/go-vcsurl.v1"
+  packages = ["."]
+  revision = "6b12603ea6fd7f84b8c90118face09df39ea10c6"
+  version = "v1"
+
+[[projects]]
   name = "gopkg.in/src-d/go-errors.v1"
   packages = ["."]
   revision = "8bbbeeb767dfdd053b9b45d5a16a4f4ce2c6f694"
@@ -215,7 +245,10 @@
 
 [[projects]]
   name = "gopkg.in/src-d/go-git.v4"
-  packages = ["plumbing"]
+  packages = [
+    "plumbing",
+    "utils/ioutil"
+  ]
   revision = "7b6c1266556f59ac436fada3fa6106d4a84f9b56"
   version = "v4.6.0"
 
@@ -228,6 +261,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "878d9453ecbc8e262747b05e3cd37118bf5e5104b626698f99240a56d6650652"
+  inputs-digest = "718d5fa9469591a1817e1f49e9ea7a022e896c027c1242135e22151bc1b98272"
   solver-name = "gps-cdcl"
   solver-version = 1
