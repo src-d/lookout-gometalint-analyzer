@@ -3,6 +3,11 @@ language: go
 go:
   - "1.10.x"
 
+stages:
+  - name: tests
+  - name: release
+    if: tag IS present
+
 jobs:
   include:
     - name: "Unit tests"
@@ -29,3 +34,12 @@ jobs:
         - make no-changes-in-commit
         - make build
         - make no-changes-in-commit
+    - name: "Push image to Docker Hub"
+      stage: release
+      script:
+        - PKG_OS=linux make build
+        - DOCKER_PUSH_LATEST=true make docker-push
+
+cache:
+  directories:
+    - $HOME/protoc
