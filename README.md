@@ -18,6 +18,7 @@ Requires stable version of `gometalinter.v2` binary avabilable in PATH.
 To install, do
 ```
 go get -u gopkg.in/alecthomas/gometalinter.v2
+gometalinter.v2 --install
 ```
 This will also install a number of linter binaries, vendored by gometalinter.
 

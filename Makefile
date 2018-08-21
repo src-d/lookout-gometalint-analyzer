@@ -14,7 +14,7 @@ $(MAKEFILE):
 	git clone --quiet --depth 1 -b $(CI_BRANCH) $(CI_REPOSITORY) $(CI_PATH);
 -include $(MAKEFILE)
 
-PROTOC := protoc
+PROTOC := ../protoc/bin/protoc
 PROTOC_VER := "3.6.0"
 # Generate go code from proto files
 .PHONY: check-protoc
