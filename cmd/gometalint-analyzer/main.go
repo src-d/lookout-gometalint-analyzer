@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 
 	"github.com/bzz/lookout-gometalint-analyzer"
@@ -53,16 +52,7 @@ func main() {
 
 	var conf config
 	envconfig.MustProcess("GOMETALINT", &conf)
-
 	log.Infof("Starting %s, %s", name, litter.Sdump(conf))
-	tmp, err := ioutil.TempDir("", "gometalint")
-	if err != nil {
-		log.Errorf(err, "cannot create tmp dir in %s", os.TempDir())
-		return
-	}
-	defer os.RemoveAll(tmp)
-
-	analyzerURL := fmt.Sprintf("ipv4://%s:%d", conf.Host, conf.Port)
 
 	conn, err := grpchelper.DialContext(
 		context.Background(),
@@ -78,11 +68,13 @@ func main() {
 	analyzer := &gometalint.Analyzer{
 		Version:    version,
 		DataClient: lookout.NewDataClient(conn),
+		Args:       append([]string(nil), os.Args[1:]...),
 	}
 
 	server := grpchelper.NewServer()
 	lookout.RegisterAnalyzerServer(server, analyzer)
 
+	analyzerURL := fmt.Sprintf("ipv4://%s:%d", conf.Host, conf.Port)
 	lis, err := grpchelper.Listen(analyzerURL)
 	if err != nil {
 		log.Errorf(err, "failed to start analyzer gRPC server on %s", analyzerURL)
@@ -95,13 +87,4 @@ func main() {
 		log.Errorf(err, "gRPC server failed listening on %v", lis)
 	}
 	return
-
-	//TODO(bzz): move to Analyzer
-	//get changes
-	//  for each change
-	//    saveFileToTmp(change.File, tmp)
-
-	withArgs := append([]string(nil), os.Args[1:]...)
-	withArgs = append(withArgs, tmp)
-	_ = gometalint.RunGometalinter(withArgs)
 }

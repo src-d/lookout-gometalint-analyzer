@@ -21,7 +21,7 @@ var (
 type comment struct {
 	level string
 	file  string
-	lino  int
+	lino  int32
 	text  string
 }
 
@@ -53,7 +53,7 @@ func RunGometalinter(args []string) []comment {
 			continue
 		}
 
-		c.lino = lino
+		c.lino = int32(lino)
 		comments = append(comments, c)
 	}
 	log.Debugf("Done. %d issues found\n", len(comments))

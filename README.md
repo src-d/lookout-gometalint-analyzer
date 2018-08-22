@@ -11,6 +11,8 @@ _Disclamer: this is not official product, but only serves the purpose of testing
 make packages
 ```
 
+will produce binaries for multiple architectures under `./build`.
+
 # Dependencies
 
 Requires stable version of `gometalinter.v2` binary avabilable in PATH.
@@ -27,9 +29,9 @@ This will also install a number of linter binaries, vendored by gometalinter.
 With `lookout` binary from the latest release of [SDK](https://github.com/src-d/lookout/releases)
 
 ```
-./lookout-gometalint
+$ lookout-gometalint
 
-./look review -v ipv4://localhost:2001 \
+$ lookout review -v ipv4://localhost:2001 \
     --from c99dcdff172f1cb5505603a45d054998cb4dd606 \
     --to 3a9d78bdd1139c929903885ecb8f811931b8aa70
 ```
