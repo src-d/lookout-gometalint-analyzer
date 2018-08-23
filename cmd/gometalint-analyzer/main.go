@@ -32,9 +32,9 @@ var (
 )
 
 type config struct {
-	Host          string `envconfig:"HOST" default:"0.0.0.0"`
-	Port          int    `envconfig:"PORT" default:"2001"`
-	DataServerURL string `envconfig:"DATA_SERVER_URL" default:"ipv4://localhost:10301"`
+	Host           string `envconfig:"HOST" default:"0.0.0.0"`
+	Port           int    `envconfig:"PORT" default:"2001"`
+	DataServiceURL string `envconfig:"DATA_SERVICE_URL" default:"ipv4://localhost:10301"`
 }
 
 func main() {
@@ -54,14 +54,20 @@ func main() {
 	envconfig.MustProcess("GOMETALINT", &conf)
 	log.Infof("Starting %s, %s", name, litter.Sdump(conf))
 
+	grpcAddr, err := grpchelper.ToGoGrpcAddress(conf.DataServiceURL)
+	if err != nil {
+		log.Errorf(err, "failed to parse DataService addres %s", conf.DataServiceURL)
+		return
+	}
+
 	conn, err := grpchelper.DialContext(
 		context.Background(),
-		conf.DataServerURL,
+		grpcAddr,
 		grpc.WithInsecure(),
 		grpc.WithDefaultCallOptions(grpc.FailFast(false)),
 	)
 	if err != nil {
-		log.Errorf(err, "cannot create connection to DataServer %s", conf.DataServerURL)
+		log.Errorf(err, "cannot create connection to DataService %s", grpcAddr)
 		return
 	}
 

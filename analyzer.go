@@ -20,13 +20,6 @@ var _ lookout.AnalyzerServer = &Analyzer{}
 
 func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *lookout.ReviewEvent) (
 	*lookout.EventResponse, error) {
-	tmp, err := ioutil.TempDir("", "gometalint")
-	if err != nil {
-		log.Errorf(err, "cannot create tmp dir in %s", os.TempDir())
-		return nil, err
-	}
-	defer os.RemoveAll(tmp)
-
 	changes, err := a.DataClient.GetChanges(ctx, &lookout.ChangesRequest{
 		Head:         &e.Head,
 		Base:         &e.Base,
@@ -34,12 +27,23 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *lookout.ReviewEvent
 		WantLanguage: true,
 	})
 	if err != nil {
-		log.Errorf(err, "failed on GetChanges from the DataService")
+		log.Errorf(err, "failed to GetChanges from a DataService")
+		return nil, err
 	}
 
+	tmp, err := ioutil.TempDir("", "gometalint")
+	if err != nil {
+		log.Errorf(err, "cannot create tmp dir in %s", os.TempDir())
+		return nil, err
+	}
+	defer os.RemoveAll(tmp)
+
 	for changes.Next() {
-		//    saveFileToTmp(change.Head.File, tmp)
 		change := changes.Change()
+		if change.Head == nil {
+			continue
+		}
+
 		file := path.Join(tmp, path.Base(change.Head.Path))
 		err = ioutil.WriteFile(file, change.Head.Content, 0644)
 		if err != nil {
