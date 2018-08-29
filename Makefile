@@ -14,6 +14,8 @@ $(MAKEFILE):
 	git clone --quiet --depth 1 -b $(CI_BRANCH) $(CI_REPOSITORY) $(CI_PATH);
 -include $(MAKEFILE)
 
+GO_BUILD_ENV = CGO_ENABLED=0
+
 PROTOC := ../protoc/bin/protoc
 PROTOC_VER := "3.6.0"
 # Generate go code from proto files
