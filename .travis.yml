@@ -37,6 +37,7 @@ jobs:
     - name: "Generated code"
       before_install:
         - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+        - ./_tools/install-lookout-latest.sh
       script:
         - dep ensure -v
         - make no-changes-in-commit

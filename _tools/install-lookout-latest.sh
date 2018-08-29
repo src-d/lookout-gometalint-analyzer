@@ -21,12 +21,20 @@ if [[ "${PIPESTATUS[0]}" -ne 0 || "${PIPESTATUS[1]}" -ne 0  || "${PIPESTATUS[3]}
   exit 2
 fi
 
-if ! tar -xvzf lookout_sdk_* ; then
+if ! tar -xvzf lookout_sdk_*.tar.gz ; then
   echo "Unable to extract lookout release archive" >&2
   exit 2
 fi
 
 if ! mv lookout_sdk_*/lookout . ; then
-  echo "Unable to move file" >&2
+  echo "Unable to move lookout binary file" >&2
   exit 2
 fi
+
+if ! mv lookout_sdk_*/sdk . ; then
+  echo "Unable to move SDK dir" >&2
+  exit 2
+fi
+
+mv lookout_sdk_*.tar.gz ..
+rm -rf lookout_sdk_*

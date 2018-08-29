@@ -14,3 +14,7 @@
 # src-d/ci
 .ci
 build
+
+# lookout
+lookout
+sdk/

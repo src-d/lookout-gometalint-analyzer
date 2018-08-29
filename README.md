@@ -53,7 +53,7 @@ $ lookout review -v ipv4://localhost:2001 \
 To update lookout SDK to the [latest version](https://github.com/src-d/lookout/releases/latest) do
 ```
 wget https://github.com/src-d/lookout/releases/download/v0.x.x/lookout_sdk_v0.x.x._<os>_<arg>.tar.gz
-tar xvf lookout_sdk_*
+tar xvf lookout_sdk_*.tar.gz
 mv lookout_sdk_*/sdk .
 mv lookout_sdk_*/lookout .
 ```
