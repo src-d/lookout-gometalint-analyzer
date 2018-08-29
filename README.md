@@ -2,6 +2,8 @@
 
 A [lookout](https://github.com/src-d/lookout/) analyzer implementation that uses [gometalinter](https://github.com/alecthomas/gometalinter).
 
+It only applies 6 checks from gometalinter that are file-level, and skips dir and package level ones.
+
 _Disclamer: this is not official product, but only serves the purpose of testing the lookout._
 
 
@@ -43,7 +45,7 @@ $ lookout review -v ipv4://localhost:2001 \
 | `GOMETALINT_HOST` | `0.0.0.0` | IP address to bind the gRCP serve |
 | `GOMETALINT_PORT` | `2001` | Port to bind the gRPC server |
 | `GOMETALINT_SERVER_URL` | `ipv4://localhost:10302` | gRPC URL of the [Data service](https://github.com/src-d/lookout/tree/master/docs#components)
-
+| `GOMETALINT_LOG_LEVEL` | `info` | Logging level (info, debug, warning or error) |
 
 # Development
 ## SDK update

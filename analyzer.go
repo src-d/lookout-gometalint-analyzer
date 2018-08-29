@@ -5,11 +5,15 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/src-d/lookout"
 	log "gopkg.in/src-d/go-log.v1"
 )
 
+const artificialSep = "___.___"
+
+// Analyzer for the lookout
 type Analyzer struct {
 	Version    string
 	DataClient *lookout.DataClient
@@ -37,6 +41,7 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *lookout.ReviewEvent
 		return nil, err
 	}
 	defer os.RemoveAll(tmp)
+	log.Debugf("Saving files to '%s'", tmp)
 
 	for changes.Next() {
 		change := changes.Change()
@@ -44,12 +49,7 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *lookout.ReviewEvent
 			continue
 		}
 
-		file := path.Join(tmp, path.Base(change.Head.Path))
-		err = ioutil.WriteFile(file, change.Head.Content, 0644)
-		if err != nil {
-			log.Errorf(err, "failed to write a file %s", file)
-		}
-		log.Infof("Saved file:'%s'", file)
+		tryToSaveTo(change.Head, tmp)
 	}
 	if changes.Err() != nil {
 		log.Errorf(changes.Err(), "failed to get a file from DataServer")
@@ -59,20 +59,38 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *lookout.ReviewEvent
 	comments := RunGometalinter(withArgs)
 	var allComments []*lookout.Comment
 	for _, comment := range comments {
+		//TrimLeft(, tmp) but \w rel path
+		file := comment.file[strings.LastIndex(comment.file, tmp)+len(tmp):]
 		newComment := lookout.Comment{
-			File: comment.file,
+			File: strings.TrimLeft(
+				path.Join(strings.Split(file, artificialSep)...),
+				string(os.PathSeparator)),
 			Line: comment.lino,
 			Text: comment.text,
 		}
 		allComments = append(allComments, &newComment)
+		log.Debugf("Get comment %v", newComment)
 	}
 
+	log.Infof("%d comments created", len(allComments))
 	return &lookout.EventResponse{
 		AnalyzerVersion: a.Version,
 		Comments:        allComments,
 	}, nil
 }
 
+// tryToSaveTo saves a file to given dir, preserving it's original path.
+// It only loggs any errors and does not fail. All files saved this way will
+// be in the root of the same dir.
+func tryToSaveTo(file *lookout.File, tmp string) {
+	nFile := strings.Join(strings.Split(file.Path, string(os.PathSeparator)), artificialSep)
+	nPath := path.Join(tmp, nFile)
+	log.Debugf("Saving file '%s', as '%s'", file.Path, nPath)
+	err := ioutil.WriteFile(nPath, file.Content, 0644)
+	if err != nil {
+		log.Errorf(err, "failed to write a file %s", nPath)
+	}
+}
 func (a *Analyzer) NotifyPushEvent(ctx context.Context, e *lookout.PushEvent) (*lookout.EventResponse, error) {
 	return &lookout.EventResponse{}, nil
 }

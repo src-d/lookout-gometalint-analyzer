@@ -12,27 +12,29 @@ import (
 
 var (
 	bin         = "gometalinter.v2"
-	DefaultArgs = []string{
+	defaultArgs = []string{
 		"--disable-all", "--enable=dupl", "--enable=gas",
 		"--enable=gofmt", "--enable=goimports", "--enable=lll", "--enable=misspell",
 	}
 )
 
-type comment struct {
+// Comment as returned by gometalint
+type Comment struct {
 	level string
 	file  string
 	lino  int32
 	text  string
 }
 
-func RunGometalinter(args []string) []comment {
-	dArgs := append([]string(nil), DefaultArgs...)
+// RunGometalinter execs gometalint binary \w pre-configured set of linters
+func RunGometalinter(args []string) []Comment {
+	dArgs := append([]string(nil), defaultArgs...)
 	args = append(dArgs, args...)
 	log.Infof("Running '%s %v'\n", bin, args)
-	out, _ := exec.Command(bin, args...).Output()
+	out, _ := exec.Command(bin, args...).Output() // nolint: gas
 	// ignoring err, as it's always not nil if anything found
 
-	var comments []comment
+	var comments []Comment
 	s := bufio.NewScanner(bytes.NewReader(out))
 	for s.Scan() { //scan stdout for results
 		sp := strings.SplitN(s.Text(), ":", 5)
@@ -42,7 +44,7 @@ func RunGometalinter(args []string) []comment {
 		}
 
 		file, line, _, severity, msg := sp[0], sp[1], sp[2], sp[3], sp[4]
-		c := comment{
+		c := Comment{
 			level: severity,
 			file:  file,
 			text:  msg,
