@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: lookout-gometalint-analyzer
+  labels:
+    app: gometalint-analyzer
+    release: lookout
+spec:
+  type: ClusterIP
+  ports:
+    - port: 10303
+      targetPort: 10303
+      protocol: TCP
+  selector:
+    app: gometalint-analyzer
+    release: lookout
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: lookout-gometalint-analyzer
+  labels:
+    app: gometalint-analyzer
+    release: lookout
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gometalint-analyzer
+      release: lookout
+  template:
+    metadata:
+      labels:
+        app: gometalint-analyzer
+        release: lookout
+    spec:
+      containers:
+        - name: gometalint-analyzer
+          image: "abezzubov/lookout-gometalint-analyzer:v0.0.1"
+          imagePullPolicy: Always
+          env:
+            - name: GOMETALINT_SERVER_URL
+              value: "ipv4://lookout:10301"
+            - name: GOMETALINT_PORT
+              value: "10303"
+          ports:
+            - containerPort: 10303
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 10303
+          readinessProbe:
+            tcpSocket:
+              port: 10303
+      nodeSelector:
+        srcd.host/type: worker
