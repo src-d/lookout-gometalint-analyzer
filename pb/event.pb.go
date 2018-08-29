@@ -42,7 +42,7 @@ func (m *CommitRevision) Reset()         { *m = CommitRevision{} }
 func (m *CommitRevision) String() string { return proto.CompactTextString(m) }
 func (*CommitRevision) ProtoMessage()    {}
 func (*CommitRevision) Descriptor() ([]byte, []int) {
-	return fileDescriptor_event_092265e2a273c73c, []int{0}
+	return fileDescriptor_event_26fb1d21dc6d515e, []int{0}
 }
 func (m *CommitRevision) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -73,7 +73,7 @@ var xxx_messageInfo_CommitRevision proto.InternalMessageInfo
 
 // ReferencePointer is the reference to a git refererence in a repository.
 type ReferencePointer struct {
-	// InternalRepositoryURL is the origina; clone URL not canonized.
+	// InternalRepositoryURL is the original clone URL, not canonicalized.
 	InternalRepositoryURL string `protobuf:"bytes,1,opt,name=internal_repository_url,json=internalRepositoryUrl,proto3" json:"internal_repository_url,omitempty"`
 	// ReferenceName is the name of the reference pointing.
 	ReferenceName gopkg_in_src_d_go_git_v4_plumbing.ReferenceName `protobuf:"bytes,2,opt,name=reference_name,json=referenceName,proto3,casttype=gopkg.in/src-d/go-git.v4/plumbing.ReferenceName" json:"reference_name,omitempty"`
@@ -87,7 +87,7 @@ func (m *ReferencePointer) Reset()         { *m = ReferencePointer{} }
 func (m *ReferencePointer) String() string { return proto.CompactTextString(m) }
 func (*ReferencePointer) ProtoMessage()    {}
 func (*ReferencePointer) Descriptor() ([]byte, []int) {
-	return fileDescriptor_event_092265e2a273c73c, []int{1}
+	return fileDescriptor_event_26fb1d21dc6d515e, []int{1}
 }
 func (m *ReferencePointer) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -139,7 +139,7 @@ func (m *PushEvent) Reset()         { *m = PushEvent{} }
 func (m *PushEvent) String() string { return proto.CompactTextString(m) }
 func (*PushEvent) ProtoMessage()    {}
 func (*PushEvent) Descriptor() ([]byte, []int) {
-	return fileDescriptor_event_092265e2a273c73c, []int{2}
+	return fileDescriptor_event_26fb1d21dc6d515e, []int{2}
 }
 func (m *PushEvent) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -199,7 +199,7 @@ func (m *ReviewEvent) Reset()         { *m = ReviewEvent{} }
 func (m *ReviewEvent) String() string { return proto.CompactTextString(m) }
 func (*ReviewEvent) ProtoMessage()    {}
 func (*ReviewEvent) Descriptor() ([]byte, []int) {
-	return fileDescriptor_event_092265e2a273c73c, []int{3}
+	return fileDescriptor_event_26fb1d21dc6d515e, []int{3}
 }
 func (m *ReviewEvent) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -1511,9 +1511,9 @@ var (
 	ErrIntOverflowEvent   = fmt.Errorf("proto: integer overflow")
 )
 
-func init() { proto.RegisterFile("event.proto", fileDescriptor_event_092265e2a273c73c) }
+func init() { proto.RegisterFile("event.proto", fileDescriptor_event_26fb1d21dc6d515e) }
 
-var fileDescriptor_event_092265e2a273c73c = []byte{
+var fileDescriptor_event_26fb1d21dc6d515e = []byte{
 	// 632 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x94, 0x3d, 0x6f, 0xd3, 0x40,
 	0x18, 0xc7, 0xe3, 0xe2, 0xa6, 0xc9, 0xe3, 0x24, 0xad, 0x4e, 0x2d, 0x35, 0x11, 0x8a, 0x4b, 0xa6,
