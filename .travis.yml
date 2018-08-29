@@ -14,7 +14,7 @@ jobs:
       stage: test
       script: make test
     - name: "Integration test: simple proxy"
-      before_install:
+      install:
         - go get -u gopkg.in/alecthomas/gometalinter.v2
         - gometalinter.v2 --install
       before_script:
@@ -25,17 +25,18 @@ jobs:
         - cat proxy.log
         - gometalinter.v2 --disable-all --enable=dupl --enable=gas --enable=gofmt --enable=goimports --enable=lll --enable=misspell ./_fixtures
     - name: "Integration test: analyzer server"
-      before_install:
+      install:
         - ./_tools/install-lookout-latest.sh
       before_script:
         - make build
       script:
         - (./build/lookout-gometalint-analyzer_linux_amd64/gometalint-analyzer 2>&1 | tee -a analyzer.log)&
         - ./lookout review -v "ipv4://localhost:2001" --from="86466b69281ca6bdcbc55413014ddb5a5ac4ce50" --to="a044e568d6b3bd6bf5ecf49fdd8c170de53fcb73"
-      afteer_failure:
+      after_failure:
         - cat analyzer.log
+        - cat ../lookout-install.log
     - name: "Generated code"
-      before_install:
+      install:
         - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
         - ./_tools/install-lookout-latest.sh
       script:
@@ -45,6 +46,8 @@ jobs:
         - make no-changes-in-commit
         - make build
         - make no-changes-in-commit
+      after_failure:
+        - cat ../lookout-install.log
     - name: "Push image to Docker Hub"
       stage: release
       script:

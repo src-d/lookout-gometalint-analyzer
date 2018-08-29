@@ -12,11 +12,12 @@ curl -s --connect-timeout 5 \
     --retry-delay 0 \
     --retry-max-time 40\
     "https://api.github.com/repos/src-d/lookout/releases/latest" \
+  | tee -a ../lookout-install.log \
   | grep -oP '"browser_download_url": "\K(.*)(?=")' \
   | grep linux \
   | wget -qi -
 
-if [[ "${PIPESTATUS[0]}" -ne 0 || "${PIPESTATUS[1]}" -ne 0  || "${PIPESTATUS[3]}" -ne 0 ]]; then
+if [[ "${PIPESTATUS[0]}" -ne 0 || "${PIPESTATUS[1]}" -ne 0 || "${PIPESTATUS[2]}" -ne 0 || "${PIPESTATUS[4]}" -ne 0 ]]; then
   echo "Unable download latest lookout SDK release" >&2
   exit 2
 fi
