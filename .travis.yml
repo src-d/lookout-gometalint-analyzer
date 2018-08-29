@@ -51,7 +51,7 @@ jobs:
     - name: "Push image to Docker Hub"
       stage: release
       script:
-        - PKG_OS=linux make build
+        - PKG_OS=linux make packages
         - DOCKER_PUSH_LATEST=true make docker-push
 
 cache:
