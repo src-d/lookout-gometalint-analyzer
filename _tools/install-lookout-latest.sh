@@ -32,10 +32,9 @@ if ! mv lookout_sdk_*/lookout . ; then
   exit 2
 fi
 
-if ! mv lookout_sdk_*/sdk . ; then
-  echo "Unable to move SDK dir" >&2
-  exit 2
-fi
+# if ! mv lookout_sdk_*/sdk . ; then
+#   echo "Unable to move SDK dir" >&2
+#   exit 2
+# fi
 
-mv lookout_sdk_*.tar.gz ..
 rm -rf lookout_sdk_*
