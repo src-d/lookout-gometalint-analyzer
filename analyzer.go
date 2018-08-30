@@ -43,16 +43,26 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *lookout.ReviewEvent
 	defer os.RemoveAll(tmp)
 	log.Debugf("Saving files to '%s'", tmp)
 
+	saved := 0
 	for changes.Next() {
 		change := changes.Change()
 		if change.Head == nil {
 			continue
 		}
 
-		tryToSaveTo(change.Head, tmp)
+		// analyze only changes in Golang
+		if strings.HasPrefix(strings.ToLower(change.Head.Language), "go") {
+			tryToSaveTo(change.Head, tmp)
+			saved++
+		}
 	}
 	if changes.Err() != nil {
 		log.Errorf(changes.Err(), "failed to get a file from DataServer")
+	}
+
+	if saved == 0 {
+		log.Debugf("no Golang files found. skip running gometalinter")
+		return &lookout.EventResponse{AnalyzerVersion: a.Version}, nil
 	}
 
 	withArgs := append(a.Args, tmp)
