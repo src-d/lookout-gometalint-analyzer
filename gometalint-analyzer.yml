@@ -8,8 +8,8 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 10303
-      targetPort: 10303
+    - port: 10302
+      targetPort: 10302
       protocol: TCP
   selector:
     app: gometalint-analyzer
@@ -39,10 +39,12 @@ spec:
           image: "abezzubov/lookout-gometalint-analyzer:v0.0.1"
           imagePullPolicy: Always
           env:
-            - name: GOMETALINT_SERVER_URL
+            - name: GOMETALINT_DATA_SERVICE_URL
               value: "ipv4://lookout:10301"
             - name: GOMETALINT_PORT
               value: "10303"
+            - name: GOMETALINT_LOG_LEVEL
+              value: "debug"
           ports:
             - containerPort: 10303
               protocol: TCP
