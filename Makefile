@@ -3,7 +3,7 @@ PROJECT = lookout-gometalint-analyzer
 COMMANDS = cmd/gometalint-analyzer
 
 DOCKERFILES = Dockerfile:$(PROJECT)
-DOCKER_ORG = "abezzubov"
+DOCKER_ORG = "srcd"
 
 # Including ci Makefile
 CI_REPOSITORY ?= https://github.com/src-d/ci.git

@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/bzz/lookout-gometalint-analyzer"
+	"github.com/src-d/lookout-gometalint-analyzer"
 
 	log "gopkg.in/src-d/go-log.v1"
 )

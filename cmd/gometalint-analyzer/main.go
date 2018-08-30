@@ -6,9 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/bzz/lookout-gometalint-analyzer"
-	//TODO: extract to golang sdk
-	"github.com/bzz/lookout-gometalint-analyzer/util/grpchelper"
+	"github.com/src-d/lookout-gometalint-analyzer"
+	"github.com/src-d/lookout-gometalint-analyzer/util/grpchelper"
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/sanity-io/litter"

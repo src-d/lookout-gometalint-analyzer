@@ -1,4 +1,4 @@
-# [![Build Status](https://travis-ci.org/bzz/lookout-gometalint-analyzer.svg)](https://travis-ci.org/bzz/lookout-gometalint-analyzer) lookout analyzer: gometalint
+# [![Build Status](https://travis-ci.org/src-d/lookout-gometalint-analyzer.svg)](https://travis-ci.org/src-d/lookout-gometalint-analyzer) lookout analyzer: gometalint
 
 A [lookout](https://github.com/src-d/lookout/) analyzer implementation that uses [gometalinter](https://github.com/alecthomas/gometalinter).
 
@@ -55,7 +55,6 @@ To update lookout SDK to the [latest version](https://github.com/src-d/lookout/r
 wget https://github.com/src-d/lookout/releases/download/v0.x.x/lookout_sdk_v0.x.x._<os>_<arg>.tar.gz
 tar xvf lookout_sdk_*.tar.gz
 mv lookout_sdk_*/sdk .
-mv lookout_sdk_*/lookout .
 ```
 
 
