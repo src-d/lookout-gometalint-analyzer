@@ -25,10 +25,12 @@ var _ lookout.AnalyzerServer = &Analyzer{}
 func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *lookout.ReviewEvent) (
 	*lookout.EventResponse, error) {
 	changes, err := a.DataClient.GetChanges(ctx, &lookout.ChangesRequest{
-		Head:         &e.Head,
-		Base:         &e.Base,
-		WantContents: true,
-		WantLanguage: true,
+		Head:            &e.Head,
+		Base:            &e.Base,
+		WantContents:    true,
+		WantLanguage:    true,
+		WantUAST:        false,
+		ExcludeVendored: true,
 	})
 	if err != nil {
 		log.Errorf(err, "failed to GetChanges from a DataService")
