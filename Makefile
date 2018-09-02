@@ -15,22 +15,3 @@ $(MAKEFILE):
 -include $(MAKEFILE)
 
 GO_BUILD_ENV = CGO_ENABLED=0
-
-PROTOC := ../protoc/bin/protoc
-PROTOC_VER := "3.6.0"
-# Generate go code from proto files
-.PHONY: check-protoc
-check-protoc:
-	./_tools/install-protoc-maybe.sh
-.PHONY: protogen
-protogen: check-protoc
-	$(GOCMD) install ./vendor/github.com/gogo/protobuf/protoc-gen-gogofaster
-	$(PROTOC) \
-		-I sdk \
-		--gogofaster_out=plugins=grpc,\
-Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,\
-Mgoogle/protobuf/duration.proto=github.com/gogo/protobuf/types,\
-Mgoogle/protobuf/timestamp.proto=github.com/gogo/protobuf/types,\
-Mgoogle/protobuf/struct.proto=github.com/gogo/protobuf/types,\
-Mgoogle/protobuf/wrappers.proto=github.com/gogo/protobuf/types:pb \
-sdk/*.proto
