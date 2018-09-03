@@ -7,11 +7,11 @@ import (
 	"os"
 
 	"github.com/src-d/lookout-gometalint-analyzer"
-	"github.com/src-d/lookout-gometalint-analyzer/util/grpchelper"
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/sanity-io/litter"
 	"github.com/src-d/lookout"
+	"github.com/src-d/lookout/util/grpchelper"
 	"google.golang.org/grpc"
 	log "gopkg.in/src-d/go-log.v1"
 )

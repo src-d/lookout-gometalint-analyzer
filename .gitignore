@@ -13,7 +13,4 @@
 
 # src-d/ci
 .ci
-build
-
-# lookout
-lookout
+/build
