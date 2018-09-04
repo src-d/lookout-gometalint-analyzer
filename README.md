@@ -28,12 +28,12 @@ This will also install a number of linter binaries, vendored by gometalinter.
 
 # Example of utilization
 
-With `lookout` binary from the latest release of [SDK](https://github.com/src-d/lookout/releases)
+With `lookout-sdk` binary from the latest release of [SDK](https://github.com/src-d/lookout/releases)
 
 ```
 $ lookout-gometalint
 
-$ lookout review -v ipv4://localhost:2001 \
+$ lookout-sdk review -v ipv4://localhost:2001 \
     --from c99dcdff172f1cb5505603a45d054998cb4dd606 \
     --to 3a9d78bdd1139c929903885ecb8f811931b8aa70
 ```
@@ -46,16 +46,6 @@ $ lookout review -v ipv4://localhost:2001 \
 | `GOMETALINT_PORT` | `2001` | Port to bind the gRPC server |
 | `GOMETALINT_SERVER_URL` | `ipv4://localhost:10302` | gRPC URL of the [Data service](https://github.com/src-d/lookout/tree/master/docs#components)
 | `GOMETALINT_LOG_LEVEL` | `info` | Logging level (info, debug, warning or error) |
-
-# Development
-## SDK update
-
-To update lookout SDK to the [latest version](https://github.com/src-d/lookout/releases/latest) do
-```
-wget https://github.com/src-d/lookout/releases/download/v0.x.x/lookout_sdk_v0.x.x._<os>_<arg>.tar.gz
-tar xvf lookout_sdk_*.tar.gz
-mv lookout_sdk_*/sdk .
-```
 
 
 # Licens
