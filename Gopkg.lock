@@ -323,10 +323,12 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/gogo/protobuf/types",
     "github.com/kami-zh/go-capturer",
     "github.com/kelseyhightower/envconfig",
     "github.com/sanity-io/litter",
     "github.com/src-d/lookout",
+    "github.com/src-d/lookout/pb",
     "github.com/src-d/lookout/util/grpchelper",
     "github.com/stretchr/testify/require",
     "google.golang.org/grpc",
