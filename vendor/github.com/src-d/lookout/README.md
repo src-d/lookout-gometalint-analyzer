@@ -6,7 +6,7 @@ A service for assisted code review, that allows running custom code Analyzers on
 
 If you are developing an Analyzer, please check [SDK documentation](./sdk/README.md).
 
-It includes a curl-style binary that allows to trigger Analyzers directly, without launching a full lookout server.
+It includes a curl-style binary `lookout-sdk` that allows to trigger Analyzers directly, without launching a full lookout server.
 
 # Installation
 
@@ -41,7 +41,7 @@ GITHUB_USER=<user> GITHUB_TOKEN=<token> REPO=github.com/<user>/<name> docker-com
     ```
 1. Initialize the database. This command will work for the PostgreSQL created by docker-compose, use `-h` to see other options.
     ```bash
-    lookout migrate
+    lookoutd migrate
     ```
 1. Start an analyzer
 Any of the analyzers or a default dummy one, included in this repository
@@ -52,9 +52,9 @@ Any of the analyzers or a default dummy one, included in this repository
 1. Start a lookout server
     1. With posting analysis results on GitHub
         - Obtain [GitHub access token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/)
-        - Run `lookout serve --github-token <token> --github-user <user> <repository>`
+        - Run `lookoutd serve --github-token <token> --github-user <user> <repository>`
     1. Without posting analysis results (only printing)
-        - `lookout serve --dry-run <repository>`
+        - `lookoutd serve --dry-run <repository>`
 
 
 # Configuration file
@@ -87,6 +87,26 @@ Merging rules:
 - Objects are deep merged
 - Arrays are replaced
 - Null value replaces object
+
+# Authenticate as a GitHub App
+
+Instead of using a GitHub username and token you can use lookout as a [GitHub App](https://developer.github.com/apps/about-apps/).
+
+You need to create a new GitHub App following the [GitHub documentation](https://developer.github.com/apps/building-github-apps/creating-a-github-app/). Then download a private key ([see how here](https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/)) and set the following fields in your `config.yml` file:
+
+```yml
+providers:
+  github:
+    app_id: 1234
+    private_key: ./key.pem
+```
+
+You should also unset any environment variable or option for the GitHub username and token authentication.
+
+_Note_: This authentication method is still under development. There are some caveats you should be aware of:
+
+When using this authentication method the repositories to analyze are retrieved from the GitHub installations.
+This means that the positional argument for `lookoutd serve` is ignored. You should also be aware that the list of repositories is retrieved only once when the server starts.
 
 # Contribute
 

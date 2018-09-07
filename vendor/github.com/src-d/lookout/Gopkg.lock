@@ -26,12 +26,28 @@
   revision = "9c5fe88206d7765837fed3732a42ef88fc51f1a1"
 
 [[projects]]
+  digest = "1:a3998b8ea2d61301e5dce8de279e789da031fb36cd98b374e7299591609c34f1"
+  name = "github.com/bradleyfalzon/ghinstallation"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "3f4e9b1898e6b65e31827d5dccb97d91d59feaa3"
+  version = "v0.1.2"
+
+[[projects]]
   digest = "1:a2c1d0e43bd3baaa071d1b9ed72c27d78169b2b269f71c105ac4ba34b1be4a39"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   pruneopts = "NUT"
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
   version = "v1.1.0"
+
+[[projects]]
+  digest = "1:7a6852b35eb5bbc184561443762d225116ae630c26a7c4d90546619f1e7d2ad2"
+  name = "github.com/dgrijalva/jwt-go"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
 
 [[projects]]
   digest = "1:de4a74b504df31145ffa8ca0c4edbffa2f3eb7f466753962184611b618fa5981"
@@ -49,7 +65,7 @@
   version = "v1.9.0"
 
 [[projects]]
-  digest = "1:aba848b77ff362b03db51ac06379c36a120bc05b4cc6c5c74f6e6fa310454fa5"
+  digest = "1:983cb7d70588854e2706e32c61698bbf0eab4956fca89e86c1c10d7213679a0e"
   name = "github.com/gogo/protobuf"
   packages = [
     "gogoproto",
@@ -58,9 +74,9 @@
     "sortkeys",
     "types",
   ]
-  pruneopts = "T"
-  revision = "1adfc126b41513cc696b209667c8656ea7aac67c"
-  version = "v1.0.0"
+  pruneopts = "NUT"
+  revision = "636bf0302bc95575d69441b25a2603156ffdddf1"
+  version = "v1.1.1"
 
 [[projects]]
   digest = "1:d49485d62a6b0f0c0c5a59ddfb86ae9f9be581fb47a97eb9cf8bee9d945e2d35"
@@ -151,6 +167,14 @@
   pruneopts = "NUT"
   revision = "c6ca198ec95c841fdb89fc0de7496fed11ab854e"
   version = "v1.4.0"
+
+[[projects]]
+  branch = "master"
+  digest = "1:6c2f939d99ad2074a4113c36aa93fa792ede8ff0b8cdb97634b41b9c5da7fab6"
+  name = "github.com/jinzhu/copier"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "7e38e58719c33e0d44d585c4ab477a30f8cb82dd"
 
 [[projects]]
   digest = "1:8021af4dcbd531ae89433c8c3a6520e51064114aaf8eb1724c3cf911c497c9ba"
@@ -274,6 +298,13 @@
   pruneopts = "NUT"
   revision = "792786c7400a136282c1664665ae0a8db921c6c2"
   version = "v1.0.0"
+
+[[projects]]
+  digest = "1:5cb64ae11c6690416028ba76726f101ffc669cbfacf05cdb5607c52bcfff11a0"
+  name = "github.com/sanity-io/litter"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "09e3a73d5b65eac2f14578aec8fb74ee9b4f1a5e"
 
 [[projects]]
   digest = "1:6bc0652ea6e39e22ccd522458b8bdd8665bf23bdc5a20eec90056e4dc7e273ca"
@@ -623,6 +654,13 @@
   version = "v1.0.1"
 
 [[projects]]
+  digest = "1:10d795ab45a9e608b4c6ce471ac7dad79744b58b0940d93444b96f2131224a66"
+  name = "gopkg.in/src-d/lookout-sdk.v0"
+  packages = ["pb"]
+  pruneopts = "NUT"
+  revision = "13a9d4e12a91b75bafa30802b1df5c6ea2693fca"
+
+[[projects]]
   digest = "1:20d5d24cfd1dac53cbf730d5c9861c0792c68ae547e67fc16fa0ed0660481b0a"
   name = "gopkg.in/toqueteos/substring.v1"
   packages = ["."]
@@ -650,8 +688,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/gogo/protobuf/gogoproto",
-    "github.com/gogo/protobuf/proto",
+    "github.com/bradleyfalzon/ghinstallation",
     "github.com/gogo/protobuf/types",
     "github.com/golang-migrate/migrate",
     "github.com/golang-migrate/migrate/database/postgres",
@@ -663,12 +700,14 @@
     "github.com/grpc-ecosystem/go-grpc-middleware",
     "github.com/grpc-ecosystem/go-grpc-middleware/logging",
     "github.com/jessevdk/go-flags",
+    "github.com/jinzhu/copier",
     "github.com/lib/pq",
+    "github.com/sanity-io/litter",
     "github.com/satori/go.uuid",
+    "github.com/stretchr/testify/assert",
     "github.com/stretchr/testify/mock",
     "github.com/stretchr/testify/require",
     "github.com/stretchr/testify/suite",
-    "golang.org/x/net/context",
     "google.golang.org/grpc",
     "google.golang.org/grpc/connectivity",
     "gopkg.in/bblfsh/sdk.v1/protocol",
@@ -692,6 +731,7 @@
     "gopkg.in/src-d/go-kallax.v1",
     "gopkg.in/src-d/go-kallax.v1/types",
     "gopkg.in/src-d/go-log.v1",
+    "gopkg.in/src-d/lookout-sdk.v0/pb",
     "gopkg.in/yaml.v2",
   ]
   solver-name = "gps-cdcl"
