@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	types "github.com/gogo/protobuf/types"
-	"github.com/src-d/lookout/pb"
+	"github.com/src-d/lookout/util/grpchelper"
 	"github.com/stretchr/testify/require"
 )
 
@@ -13,10 +13,10 @@ func TestArgsEmpty(t *testing.T) {
 
 	inputs := []types.Struct{
 		types.Struct{},
-		*pb.ToStruct(map[string]interface{}{
+		*grpchelper.ToPBStruct(map[string]interface{}{
 			"linters": []map[string]interface{}{},
 		}),
-		*pb.ToStruct(map[string]interface{}{
+		*grpchelper.ToPBStruct(map[string]interface{}{
 			"linters": []map[string]interface{}{
 				{
 					"name":   "unknown",
@@ -24,14 +24,14 @@ func TestArgsEmpty(t *testing.T) {
 				},
 			},
 		}),
-		*pb.ToStruct(map[string]interface{}{
+		*grpchelper.ToPBStruct(map[string]interface{}{
 			"linters": []map[string]interface{}{
 				{
 					"name": "lll",
 				},
 			},
 		}),
-		*pb.ToStruct(map[string]interface{}{
+		*grpchelper.ToPBStruct(map[string]interface{}{
 			"linters": []map[string]interface{}{
 				{
 					"name":   "lll",
@@ -39,7 +39,7 @@ func TestArgsEmpty(t *testing.T) {
 				},
 			},
 		}),
-		*pb.ToStruct(map[string]interface{}{
+		*grpchelper.ToPBStruct(map[string]interface{}{
 			"linters": []map[string]interface{}{
 				{
 					"name":   "lll",
@@ -57,7 +57,7 @@ func TestArgsEmpty(t *testing.T) {
 
 func TestArgsCorrect(t *testing.T) {
 	a := Analyzer{}
-	require.Equal(t, []string{"--line-length=120"}, a.linterArguments(*pb.ToStruct(map[string]interface{}{
+	require.Equal(t, []string{"--line-length=120"}, a.linterArguments(*grpchelper.ToPBStruct(map[string]interface{}{
 		"linters": []map[string]interface{}{
 			{
 				"name":   "lll",
@@ -66,7 +66,7 @@ func TestArgsCorrect(t *testing.T) {
 		},
 	})))
 
-	require.Equal(t, []string{"--line-length=120"}, a.linterArguments(*pb.ToStruct(map[string]interface{}{
+	require.Equal(t, []string{"--line-length=120"}, a.linterArguments(*grpchelper.ToPBStruct(map[string]interface{}{
 		"linters": []map[string]interface{}{
 			{
 				"name":   "lll",

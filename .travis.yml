@@ -1,7 +1,7 @@
 language: go
 
 go:
-  - "1.10.x"
+  - '1.10.x'
 
 stages:
   - name: test
@@ -10,11 +10,11 @@ stages:
 
 jobs:
   include:
-    - name: "Unit tests"
+    - name: 'Unit tests'
       stage: test
       script: make test
 
-    - name: "Integration test: simple proxy"
+    - name: 'Integration test: simple proxy'
       install:
         - go get -u gopkg.in/alecthomas/gometalinter.v2
         - gometalinter.v2 --install
@@ -26,7 +26,7 @@ jobs:
         - cat proxy.log
         - gometalinter.v2 --disable-all --enable=dupl --enable=gas --enable=gofmt --enable=goimports --enable=lll --enable=misspell ./_fixtures
 
-    - name: "Integration test: analyzer server"
+    - name: 'Integration test: analyzer server'
       before_script:
         - make build
       script:
@@ -37,7 +37,7 @@ jobs:
         - cat analyzer.log
         - cat ../lookout-install.log
 
-    - name: "Generated code"
+    - name: 'Generated code'
       install:
         - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
       script:
@@ -46,12 +46,8 @@ jobs:
         - make build
         - make no-changes-in-commit
 
-    - name: "Push image to Docker Hub"
+    - name: 'Push image to Docker Hub'
       stage: release
       script:
         - PKG_OS=linux make packages
         - DOCKER_PUSH_LATEST=true make docker-push
-
-cache:
-  directories:
-    - $HOME/protoc
