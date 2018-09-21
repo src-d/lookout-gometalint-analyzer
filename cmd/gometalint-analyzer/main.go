@@ -52,6 +52,8 @@ func main() {
 	var conf config
 	envconfig.MustProcess("GOMETALINT", &conf)
 	log.Infof("Starting %s, %s", name, litter.Sdump(conf))
+	log.DefaultFactory = &log.LoggerFactory{Level: conf.LogLevel}
+	log.DefaultLogger = log.New(nil)
 
 	grpcAddr, err := grpchelper.ToGoGrpcAddress(conf.DataServiceURL)
 	if err != nil {
