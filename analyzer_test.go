@@ -75,3 +75,39 @@ func TestArgsCorrect(t *testing.T) {
 		},
 	})))
 }
+
+var pathTests = []struct {
+	in  string
+	out string
+}{
+	{"a/b.go", "/tmp/a___.___b.go"},
+	{"tmp/a/b.go", "/tmp/tmp___.___a___.___b.go"},
+	{"a/b/c/d/e.go", "/tmp/a___.___b___.___c___.___d___.___e.go"},
+}
+
+func TestPathTransformations(t *testing.T) {
+	for _, tt := range pathTests {
+		t.Run(tt.in, func(t *testing.T) {
+			flat := faltternPath(tt.in, "/tmp")
+			if flat != tt.out {
+				t.Errorf("forward: got %q, want %q", flat, tt.out)
+			}
+
+			orig := revertOriginalPath(tt.out, "/tmp")
+			if orig != tt.in {
+				t.Errorf("backward: got %q, want %q", orig, tt.in)
+			}
+		})
+	}
+}
+
+func TestPathInTextTransformations(t *testing.T) {
+	tmp := "/var/folders/rx/z9zyr71d70x92zwbn3rrjx4c0000gn/T/gometalint584398570"
+	text := "duplicate of /var/folders/rx/z9zyr71d70x92zwbn3rrjx4c0000gn/T/gometalint584398570/provider___.___github___.___poster_test.go:549-554 (dupl)"
+	expectedText := "duplicate of provider/github/poster_test.go:549-554 (dupl)"
+
+	newText := revertOriginalPathIn(text, tmp)
+	if newText != expectedText {
+		t.Fatalf("got %q, want %q", newText, expectedText)
+	}
+}
