@@ -8,6 +8,8 @@ stages:
   - name: release
     if: tag IS present
 
+go_import_path: github.com/src-d/lookout-gometalint-analyzer
+
 jobs:
   include:
     - name: 'Unit tests'
