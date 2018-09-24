@@ -5,6 +5,7 @@ import (
 
 	types "github.com/gogo/protobuf/types"
 	"github.com/src-d/lookout/util/grpchelper"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -88,15 +89,8 @@ var pathTests = []struct {
 func TestPathTransformations(t *testing.T) {
 	for _, tt := range pathTests {
 		t.Run(tt.in, func(t *testing.T) {
-			flat := faltternPath(tt.in, "/tmp")
-			if flat != tt.out {
-				t.Errorf("forward: got %q, want %q", flat, tt.out)
-			}
-
-			orig := revertOriginalPath(tt.out, "/tmp")
-			if orig != tt.in {
-				t.Errorf("backward: got %q, want %q", orig, tt.in)
-			}
+			assert.Equal(t, tt.out, faltternPath(tt.in, "/tmp"))
+			assert.Equal(t, tt.in, revertOriginalPath(tt.out, "/tmp"))
 		})
 	}
 }
