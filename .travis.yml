@@ -39,7 +39,7 @@ jobs:
         - cat analyzer.log
         - cat ../lookout-install.log
 
-    - name: 'Generated code'
+    - name: 'Check deps'
       install:
         - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
       script:
