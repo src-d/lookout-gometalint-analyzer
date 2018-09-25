@@ -89,7 +89,7 @@ var pathTests = []struct {
 func TestPathTransformations(t *testing.T) {
 	for _, tt := range pathTests {
 		t.Run(tt.in, func(t *testing.T) {
-			assert.Equal(t, tt.out, faltternPath(tt.in, "/tmp"))
+			assert.Equal(t, tt.out, flattenPath(tt.in, "/tmp"))
 			assert.Equal(t, tt.in, revertOriginalPath(tt.out, "/tmp"))
 		})
 	}

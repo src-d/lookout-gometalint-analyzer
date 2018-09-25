@@ -126,8 +126,8 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *lookout.ReviewEvent
 	}, nil
 }
 
-// faltternPath flattens relative path and puts it inside tmp.
-func faltternPath(file string, tmp string) string {
+// flattenPath flattens relative path and puts it inside tmp.
+func flattenPath(file string, tmp string) string {
 	nFile := strings.Join(strings.Split(file, string(os.PathSeparator)), artificialSep)
 	nPath := path.Join(tmp, nFile)
 	return nPath
@@ -163,7 +163,7 @@ func revertOriginalPathIn(text string, tmp string) string {
 // It only loggs any errors and does not fail. All files saved this way will
 // be in the root of the same dir.
 func tryToSaveTo(file *lookout.File, tmp string) {
-	flatPath := faltternPath(file.Path, tmp)
+	flatPath := flattenPath(file.Path, tmp)
 	err := ioutil.WriteFile(flatPath, file.Content, 0644)
 	if err != nil {
 		log.Errorf(err, "failed to write a file %q", flatPath)
