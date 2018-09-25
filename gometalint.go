@@ -30,7 +30,7 @@ type Comment struct {
 func RunGometalinter(args []string) []Comment {
 	dArgs := append([]string(nil), defaultArgs...)
 	args = append(dArgs, args...)
-	log.Infof("Running '%s %v'\n", bin, args)
+	log.Debugf("Running '%s %v'\n", bin, args)
 	out, _ := exec.Command(bin, args...).Output() // nolint: gas
 	// ignoring err, as it's always not nil if anything found
 

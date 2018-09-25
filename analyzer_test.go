@@ -5,6 +5,7 @@ import (
 
 	types "github.com/gogo/protobuf/types"
 	"github.com/src-d/lookout/util/grpchelper"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -74,4 +75,33 @@ func TestArgsCorrect(t *testing.T) {
 			},
 		},
 	})))
+}
+
+var pathTests = []struct {
+	in  string
+	out string
+}{
+	{"a/b.go", "/tmp/a___.___b.go"},
+	{"tmp/a/b.go", "/tmp/tmp___.___a___.___b.go"},
+	{"a/b/c/d/e.go", "/tmp/a___.___b___.___c___.___d___.___e.go"},
+}
+
+func TestPathTransformations(t *testing.T) {
+	for _, tt := range pathTests {
+		t.Run(tt.in, func(t *testing.T) {
+			assert.Equal(t, tt.out, flattenPath(tt.in, "/tmp"))
+			assert.Equal(t, tt.in, revertOriginalPath(tt.out, "/tmp"))
+		})
+	}
+}
+
+func TestPathInTextTransformations(t *testing.T) {
+	tmp := "/var/folders/rx/z9zyr71d70x92zwbn3rrjx4c0000gn/T/gometalint584398570"
+	text := "duplicate of /var/folders/rx/z9zyr71d70x92zwbn3rrjx4c0000gn/T/gometalint584398570/provider___.___github___.___poster_test.go:549-554 (dupl)"
+	expectedText := "duplicate of provider/github/poster_test.go:549-554 (dupl)"
+
+	newText := revertOriginalPathIn(text, tmp)
+	if newText != expectedText {
+		t.Fatalf("got %q, want %q", newText, expectedText)
+	}
 }
