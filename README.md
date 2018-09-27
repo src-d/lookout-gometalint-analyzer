@@ -48,6 +48,6 @@ $ lookout-sdk review -v ipv4://localhost:2001 \
 | `GOMETALINT_LOG_LEVEL` | `info` | Logging level ("info", "debug", "warning" or "error") |
 
 
-# Licens
+# License
 
-AGPLv3
+AGPLv3, see [LICENSE](LICENSE)
