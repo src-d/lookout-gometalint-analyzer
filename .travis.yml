@@ -53,3 +53,9 @@ jobs:
       script:
         - PKG_OS=linux make packages
         - DOCKER_PUSH_LATEST=true make docker-push
+    - name: 'Deploy to staging'
+      stage: release
+      install:
+        - make install-helm
+      script:
+        - HELM_RELEASE=lookout-gometalint-analyzer HELM_CHART=lookout-gometalint-analyzer K8S_NAMESPACE=lookout HELM_ARGS="--tiller-namespace=lookout --repo https://src-d.github.io/charts/ --set image.tag=$TRAVIS_TAG -f .helm_staging.yml" make deploy
