@@ -7,6 +7,8 @@ stages:
   - name: test
   - name: release
     if: tag IS present
+  - name: deploy
+    if: tag IS present
 
 go_import_path: github.com/src-d/lookout-gometalint-analyzer
 
@@ -54,7 +56,7 @@ jobs:
         - PKG_OS=linux make packages
         - DOCKER_PUSH_LATEST=true make docker-push
     - name: 'Deploy to staging'
-      stage: release
+      stage: deploy
       install:
         - make install-helm
       script:
