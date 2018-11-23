@@ -10,10 +10,9 @@ import (
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/sanity-io/litter"
-	"github.com/src-d/lookout"
-	"github.com/src-d/lookout/util/grpchelper"
 	"google.golang.org/grpc"
 	log "gopkg.in/src-d/go-log.v1"
+	"gopkg.in/src-d/lookout-sdk.v0/pb"
 )
 
 var usageMessage = fmt.Sprintf(`usage: %s [-version] [OPTIONS]
@@ -55,13 +54,13 @@ func main() {
 	log.DefaultFactory = &log.LoggerFactory{Level: conf.LogLevel}
 	log.DefaultLogger = log.New(nil)
 
-	grpcAddr, err := grpchelper.ToGoGrpcAddress(conf.DataServiceURL)
+	grpcAddr, err := pb.ToGoGrpcAddress(conf.DataServiceURL)
 	if err != nil {
 		log.Errorf(err, "failed to parse DataService addres %s", conf.DataServiceURL)
 		return
 	}
 
-	conn, err := grpchelper.DialContext(
+	conn, err := pb.DialContext(
 		context.Background(),
 		grpcAddr,
 		grpc.WithInsecure(),
@@ -74,15 +73,15 @@ func main() {
 
 	analyzer := &gometalint.Analyzer{
 		Version:    version,
-		DataClient: lookout.NewDataClient(conn),
+		DataClient: pb.NewDataClient(conn),
 		Args:       append([]string(nil), os.Args[1:]...),
 	}
 
-	server := grpchelper.NewServer()
-	lookout.RegisterAnalyzerServer(server, analyzer)
+	server := grpc.NewServer()
+	pb.RegisterAnalyzerServer(server, analyzer)
 
 	analyzerURL := fmt.Sprintf("ipv4://%s:%d", conf.Host, conf.Port)
-	lis, err := grpchelper.Listen(analyzerURL)
+	lis, err := pb.Listen(analyzerURL)
 	if err != nil {
 		log.Errorf(err, "failed to start analyzer gRPC server on %s", analyzerURL)
 		return

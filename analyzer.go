@@ -3,15 +3,17 @@ package gometalint
 import (
 	"context"
 	"fmt"
+	"io"
 	"io/ioutil"
+	"math"
 	"os"
 	"path"
 	"strconv"
 	"strings"
 
 	types "github.com/gogo/protobuf/types"
-	"github.com/src-d/lookout"
 	log "gopkg.in/src-d/go-log.v1"
+	"gopkg.in/src-d/lookout-sdk.v0/pb"
 )
 
 const artificialSep = "___.___"
@@ -19,11 +21,11 @@ const artificialSep = "___.___"
 // Analyzer for the lookout
 type Analyzer struct {
 	Version    string
-	DataClient *lookout.DataClient
+	DataClient pb.DataClient
 	Args       []string
 }
 
-var _ lookout.AnalyzerServer = &Analyzer{}
+var _ pb.AnalyzerServer = &Analyzer{}
 
 // function to convert pb.types.Value to string argument
 type argumentConstructor func(v *types.Value) string
@@ -43,7 +45,12 @@ var lintersOptions = map[string]map[string]argumentConstructor{
 				}
 				number = n
 			case *types.Value_NumberValue:
-				number = int(v.GetNumberValue())
+				intpart, frac := math.Modf(v.GetNumberValue())
+				if frac != 0 {
+					log.Warningf("wrong type for lll:maxLen argument")
+					return ""
+				}
+				number = int(intpart)
 			default:
 				log.Warningf("wrong type for lll:maxLen argument")
 				return ""
@@ -58,9 +65,9 @@ var lintersOptions = map[string]map[string]argumentConstructor{
 	},
 }
 
-func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *lookout.ReviewEvent) (
-	*lookout.EventResponse, error) {
-	changes, err := a.DataClient.GetChanges(ctx, &lookout.ChangesRequest{
+func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *pb.ReviewEvent) (
+	*pb.EventResponse, error) {
+	changes, err := a.DataClient.GetChanges(ctx, &pb.ChangesRequest{
 		Head:            &e.Head,
 		Base:            &e.Base,
 		WantContents:    true,
@@ -82,8 +89,17 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *lookout.ReviewEvent
 	log.Debugf("Saving files to '%s'", tmp)
 
 	saved := 0
-	for changes.Next() {
-		change := changes.Change()
+	for {
+		change, err := changes.Recv()
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			log.Errorf(err, "failed to get a file from DataServer")
+			continue
+		}
+
 		if change.Head == nil {
 			continue
 		}
@@ -94,23 +110,20 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *lookout.ReviewEvent
 			saved++
 		}
 	}
-	if changes.Err() != nil {
-		log.Errorf(changes.Err(), "failed to get a file from DataServer")
-	}
 
 	if saved == 0 {
 		log.Debugf("no Golang files found. skip running gometalinter")
-		return &lookout.EventResponse{AnalyzerVersion: a.Version}, nil
+		return &pb.EventResponse{AnalyzerVersion: a.Version}, nil
 	}
 	log.Debugf("%d Golang files found. running gometalinter", saved)
 
 	withArgs := append(append(a.Args, tmp), a.linterArguments(e.Configuration)...)
 	comments := RunGometalinter(withArgs)
-	var allComments []*lookout.Comment
+	var allComments []*pb.Comment
 	for _, comment := range comments {
 		origPathFile := revertOriginalPath(comment.file, tmp)
 		origPathText := revertOriginalPathIn(comment.text, tmp)
-		newComment := lookout.Comment{
+		newComment := pb.Comment{
 			File: origPathFile,
 			Line: comment.lino,
 			Text: origPathText,
@@ -120,7 +133,7 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *lookout.ReviewEvent
 	}
 
 	log.Infof("%d comments created", len(allComments))
-	return &lookout.EventResponse{
+	return &pb.EventResponse{
 		AnalyzerVersion: a.Version,
 		Comments:        allComments,
 	}, nil
@@ -162,15 +175,15 @@ func revertOriginalPathIn(text string, tmp string) string {
 // tryToSaveTo saves a file to given dir, preserving it's original path.
 // It only loggs any errors and does not fail. All files saved this way will
 // be in the root of the same dir.
-func tryToSaveTo(file *lookout.File, tmp string) {
+func tryToSaveTo(file *pb.File, tmp string) {
 	flatPath := flattenPath(file.Path, tmp)
 	err := ioutil.WriteFile(flatPath, file.Content, 0644)
 	if err != nil {
 		log.Errorf(err, "failed to write a file %q", flatPath)
 	}
 }
-func (a *Analyzer) NotifyPushEvent(ctx context.Context, e *lookout.PushEvent) (*lookout.EventResponse, error) {
-	return &lookout.EventResponse{}, nil
+func (a *Analyzer) NotifyPushEvent(ctx context.Context, e *pb.PushEvent) (*pb.EventResponse, error) {
+	return &pb.EventResponse{}, nil
 }
 
 func (a *Analyzer) linterArguments(s types.Struct) []string {
