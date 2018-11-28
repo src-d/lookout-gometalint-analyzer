@@ -38,25 +38,6 @@
   version = "v1.2.0"
 
 [[projects]]
-  digest = "1:e7fbf52d47e724a32e4a589e9630d14d4681072bdfe1a31038ad6aad5cd967d7"
-  name = "github.com/grpc-ecosystem/go-grpc-middleware"
-  packages = [
-    ".",
-    "logging",
-  ]
-  pruneopts = "UT"
-  revision = "c250d6563d4d4c20252cd865923440e829844f4e"
-  version = "v1.0.0"
-
-[[projects]]
-  branch = "master"
-  digest = "1:62fe3a7ea2050ecbd753a71889026f83d73329337ada66325cbafd5dea5f713d"
-  name = "github.com/jbenet/go-context"
-  packages = ["io"]
-  pruneopts = "UT"
-  revision = "d14ea06fba99483203c19d92cfcd13ebe73135f4"
-
-[[projects]]
   branch = "master"
   digest = "1:1f251f2f217a800ef952995dac5fbe0615f4cacd0dc448a0dffd9176a09a3823"
   name = "github.com/kami-zh/go-capturer"
@@ -143,16 +124,6 @@
   pruneopts = "UT"
   revision = "0280e33525f5d88edb71638a80b31724153225ba"
   version = "v1.0.0"
-
-[[projects]]
-  digest = "1:eab8bd1ef165028f1fcb1ac72ee91d0e422d00b6e71c0b3e881853d5205c917e"
-  name = "github.com/src-d/lookout"
-  packages = [
-    ".",
-    "util/grpchelper",
-  ]
-  pruneopts = "UT"
-  revision = "14a12e3fb0b2819d5b4145ea9ca039b1da106466"
 
 [[projects]]
   digest = "1:c40d65817cdd41fac9aa7af8bed56927bb2d6d47e4fea566a74880f5c2b1c41e"
@@ -283,14 +254,6 @@
   version = "v1.16.1"
 
 [[projects]]
-  digest = "1:6432785f8a6e930ab914151f8a89a7f3156b0981342e39b2ebc471f0f2b54cdd"
-  name = "gopkg.in/sourcegraph/go-vcsurl.v1"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "6b12603ea6fd7f84b8c90118face09df39ea10c6"
-  version = "v1"
-
-[[projects]]
   digest = "1:48c5414d07b77e35a4c19f35e1c78d6a0cbdba6386005d0f8b7b86862d0ceca3"
   name = "gopkg.in/src-d/go-errors.v1"
   packages = ["."]
@@ -299,12 +262,9 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:e69e30975c9c89463b4177da60d32d6c2ab4779a4b9aeb3a77e546148fccfc68"
+  digest = "1:a184120847ef4e42b8557862cd201781cd539e20e4786dee428d000f337659f7"
   name = "gopkg.in/src-d/go-git.v4"
-  packages = [
-    "plumbing",
-    "utils/ioutil",
-  ]
+  packages = ["plumbing"]
   pruneopts = "UT"
   revision = "7b6c1266556f59ac436fada3fa6106d4a84f9b56"
   version = "v4.6.0"
@@ -318,11 +278,12 @@
   version = "v1.0.1"
 
 [[projects]]
-  digest = "1:10d795ab45a9e608b4c6ce471ac7dad79744b58b0940d93444b96f2131224a66"
+  digest = "1:094e727400f2822152a318bffadc92f6a8ae8591d9f2204cb66a25908fd829ed"
   name = "gopkg.in/src-d/lookout-sdk.v0"
   packages = ["pb"]
   pruneopts = "UT"
-  revision = "13a9d4e12a91b75bafa30802b1df5c6ea2693fca"
+  revision = "25d972a8198fe741dea06ffa579cd0c4412865ab"
+  version = "v0.2.0"
 
 [solve-meta]
   analyzer-name = "dep"
@@ -332,12 +293,11 @@
     "github.com/kami-zh/go-capturer",
     "github.com/kelseyhightower/envconfig",
     "github.com/sanity-io/litter",
-    "github.com/src-d/lookout",
-    "github.com/src-d/lookout/util/grpchelper",
     "github.com/stretchr/testify/assert",
     "github.com/stretchr/testify/require",
     "google.golang.org/grpc",
     "gopkg.in/src-d/go-log.v1",
+    "gopkg.in/src-d/lookout-sdk.v0/pb",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

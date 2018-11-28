@@ -1,32 +1,16 @@
-package grpchelper
+package pb
 
 import (
-	"context"
 	"fmt"
 	"net"
 	"net/url"
-	"os"
 
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/connectivity"
-	log "gopkg.in/src-d/go-log.v1"
+	context "golang.org/x/net/context"
+	grpc "google.golang.org/grpc"
 )
 
-// LogAsDebug allows to log gRPC messages as debug level instead of info level
-var LogAsDebug = false
-var maxMessageSize = 100 * 1024 * 1024 // 100mb
-
-// SetMaxMessageSize overrides default grpc max. message size to send/receive to/from clients
-func SetMaxMessageSize(size int) {
-	if size >= 2048 {
-		// Setting the hard limit of message size to less than 2GB since
-		// it may overflow an int value, and it should be big enough
-		log.Errorf(fmt.Errorf("max-message-size too big (limit is 2047MB): %d", size), "SetMaxMessageSize")
-		os.Exit(1)
-	}
-
-	maxMessageSize = size * 1024 * 1024
-}
+// maxMessageSize overrides default grpc max. message size to send/receive to/from clients
+var maxMessageSize = 100 * 1024 * 1024 // 100MB
 
 //TODO: https://github.com/grpc/grpc-go/issues/1911
 
@@ -93,8 +77,6 @@ func NewServer(opts ...grpc.ServerOption) *grpc.Server {
 	opts = append(opts,
 		grpc.MaxRecvMsgSize(maxMessageSize),
 		grpc.MaxSendMsgSize(maxMessageSize),
-		grpc.StreamInterceptor(StreamServerInterceptor(log.DefaultLogger, LogAsDebug)),
-		grpc.UnaryInterceptor(UnaryServerInterceptor(log.DefaultLogger, LogAsDebug)),
 	)
 
 	return grpc.NewServer(opts...)
@@ -107,27 +89,7 @@ func DialContext(ctx context.Context, target string, opts ...grpc.DialOption) (*
 			grpc.MaxCallRecvMsgSize(maxMessageSize),
 			grpc.MaxCallSendMsgSize(maxMessageSize),
 		),
-		grpc.WithStreamInterceptor(StreamClientInterceptor(log.DefaultLogger, LogAsDebug)),
-		grpc.WithUnaryInterceptor(UnaryClientInterceptor(log.DefaultLogger, LogAsDebug)),
 	)
 
 	return grpc.DialContext(ctx, target, opts...)
-}
-
-// LogConnStatusChanges logs gRPC connection status changes
-func LogConnStatusChanges(ctx context.Context, l log.Logger, conn *grpc.ClientConn) {
-	state := conn.GetState()
-	for {
-		if conn.WaitForStateChange(ctx, state) {
-			state = conn.GetState()
-			if state == connectivity.TransientFailure {
-				l.Warningf("connection failed")
-			} else {
-				l.Infof("connection state changed to '%s'", state)
-			}
-		} else {
-			// ctx expired / canceled, stop listing
-			return
-		}
-	}
 }

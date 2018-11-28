@@ -1,4 +1,4 @@
-package grpchelper
+package pb
 
 import (
 	"fmt"
@@ -7,8 +7,8 @@ import (
 	types "github.com/gogo/protobuf/types"
 )
 
-// ToPBStruct converts a map[string]interface{} to a types.Struct
-func ToPBStruct(v map[string]interface{}) *types.Struct {
+// ToStruct converts a map[string]interface{} to a types.Struct
+func ToStruct(v map[string]interface{}) *types.Struct {
 	size := len(v)
 	if size == 0 {
 		return nil
@@ -141,6 +141,12 @@ func toValue(v reflect.Value) *types.Value {
 		for _, k := range keys {
 			if k.Kind() == reflect.String {
 				fields[k.String()] = toValue(v.MapIndex(k))
+			} else if k.Kind() == reflect.Interface {
+				ik := k.Interface()
+				sk, ok := ik.(string)
+				if ok {
+					fields[sk] = toValue(v.MapIndex(k))
+				}
 			}
 		}
 		if len(fields) == 0 {
@@ -153,6 +159,8 @@ func toValue(v reflect.Value) *types.Value {
 				},
 			},
 		}
+	case reflect.Interface:
+		return ToValue(v.Interface())
 	default:
 		return &types.Value{
 			Kind: &types.Value_StringValue{
