@@ -38,8 +38,8 @@
   branch = "master"
 
 [[constraint]]
-  name = "github.com/src-d/lookout"
-  revision = "14a12e3fb0b2819d5b4145ea9ca039b1da106466"
+  name = "gopkg.in/src-d/lookout-sdk.v0"
+  version = "0.2.0"
 
 [[constraint]]
   name = "github.com/stretchr/testify"

@@ -5,24 +5,25 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"net/url"
+	"path/filepath"
 	"reflect"
-
-	"gopkg.in/sourcegraph/go-vcsurl.v1"
+	"strings"
 )
 
+// EventID unique hash id for an event
 type EventID [20]byte
 
-// ComputeEventID compute the hash for a given provider and content.
-func ComputeEventID(provider, content string) EventID {
+// ComputeEventID compute the hash for a given list of strings.
+func ComputeEventID(content ...string) EventID {
 	var id EventID
 	h := sha1.New()
-	h.Write([]byte(provider))
-	h.Write([]byte("|"))
-	h.Write([]byte(content))
+	h.Write([]byte(strings.Join(content, "|")))
 	copy(id[:], h.Sum(nil))
 	return id
 }
 
+// IsZero checks if EventID is empty
 func (h EventID) IsZero() bool {
 	var empty EventID
 	return h == empty
@@ -32,17 +33,20 @@ func (h EventID) String() string {
 	return hex.EncodeToString(h[:])
 }
 
+// EventType supported event types
 type EventType int
 
 const (
 	_ EventType = iota
+	// PushEventType is an event type when a repository branch gets updated
 	PushEventType
+	// ReviewEventType is an event type for proposed changes like pull request
 	ReviewEventType
 )
 
 // ID honors the Event interface.
 func (e *ReviewEvent) ID() EventID {
-	return ComputeEventID(e.Provider, e.InternalID)
+	return ComputeEventID(e.Provider, e.InternalID, e.Head.Hash)
 }
 
 // Type honors the Event interface.
@@ -90,11 +94,75 @@ func (e *PushEvent) Validate() error {
 	return nil
 }
 
-type RepositoryInfo = vcsurl.RepoInfo //TODO(mcuadros): improve repository references
+// RepositoryInfo contains information about a repository
+type RepositoryInfo struct {
+	CloneURL string
+	Host     string
+	FullName string
+	Owner    string
+	Name     string
+}
+
+// list of hosts we allow when parse string into RepositoryInfo
+var supportedHosts = map[string]bool{
+	"github.com":    true,
+	"gitlab.com":    true,
+	"bitbucket.org": true,
+}
+
+// ParseRepositoryInfo creates RepositoryInfo from a string
+func ParseRepositoryInfo(input string) (*RepositoryInfo, error) {
+	u, err := url.Parse(input)
+	if err != nil {
+		return nil, err
+	}
+
+	if u.Scheme == "" {
+		return ParseRepositoryInfo("https://" + input)
+	}
+
+	if u.Scheme == "file" {
+		return &RepositoryInfo{
+			CloneURL: input,
+			FullName: u.Path,
+			Name:     filepath.Base(u.Path),
+		}, nil
+	}
+
+	if u.Scheme != "https" {
+		return nil, fmt.Errorf("only https urls are supported")
+	}
+
+	if u.Host == "" {
+		return nil, fmt.Errorf("host can't be empty")
+	}
+
+	if _, ok := supportedHosts[u.Host]; !ok {
+		return nil, fmt.Errorf("host %s is not supported", u.Host)
+	}
+
+	fullName := strings.TrimSuffix(strings.Trim(u.Path, "/"), ".git")
+	parts := strings.Split(fullName, "/")
+	if len(parts) != 2 {
+		return nil, fmt.Errorf("unsupported path %s", fullName)
+	}
+
+	if !strings.HasSuffix(u.Path, ".git") {
+		u.Path = u.Path + ".git"
+	}
+
+	return &RepositoryInfo{
+		CloneURL: u.String(),
+		Host:     u.Host,
+		FullName: fullName,
+		Owner:    parts[0],
+		Name:     parts[1],
+	}, nil
+}
 
 // Repository returns the RepositoryInfo
 func (e *ReferencePointer) Repository() *RepositoryInfo {
-	info, _ := vcsurl.Parse(e.InternalRepositoryURL)
+	info, _ := ParseRepositoryInfo(e.InternalRepositoryURL)
 	return info
 }
 
