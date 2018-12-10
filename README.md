@@ -1,11 +1,21 @@
 # [![Build Status](https://travis-ci.org/src-d/lookout-gometalint-analyzer.svg)](https://travis-ci.org/src-d/lookout-gometalint-analyzer) lookout analyzer: gometalint
 
-A [lookout](https://github.com/src-d/lookout/) analyzer implementation that uses [gometalinter](https://github.com/alecthomas/gometalinter).
+A [lookout](https://github.com/src-d/lookout/) analyzer implementation that
+uses [gometalinter](https://github.com/alecthomas/gometalinter).
 
-It only applies 6 checks from gometalinter that are file-level, and skips dir and package level ones.
+**Disclaimer:** This is not an official product, but can be used to verify that
+your lookout installation is working.
 
-_Disclamer: this is not official product, but only serves the purpose of testing the lookout._
+This analyzer only enables the gometalinter checks that are file-level, and
+skips directory- and package-level checks.  The currently-enabled linters are
+(from [gometalint.go](gometalint.go)):
 
+* `gofmt`
+* http://godoc.org/github.com/client9/misspell/cmd/misspell
+* http://godoc.org/github.com/mibk/dupl
+* http://godoc.org/github.com/securego/gosec/cmd/gosec
+* http://godoc.org/github.com/walle/lll/cmd/lll
+* http://godoc.org/golang.org/x/tools/cmd/goimports
 
 # Build
 
