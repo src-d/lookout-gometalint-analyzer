@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/src-d/lookout-gometalint-analyzer"
+	gometalint "github.com/src-d/lookout-gometalint-analyzer"
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/sanity-io/litter"
@@ -30,7 +30,7 @@ var (
 
 type config struct {
 	Host           string `envconfig:"HOST" default:"0.0.0.0"`
-	Port           int    `envconfig:"PORT" default:"2001"`
+	Port           int    `envconfig:"PORT" default:"9930"`
 	DataServiceURL string `envconfig:"DATA_SERVICE_URL" default:"ipv4://localhost:10301"`
 	LogLevel       string `envconfig:"LOG_LEVEL" default:"info" description:"Logging level (info, debug, warning or error)"`
 }
