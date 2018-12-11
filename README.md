@@ -43,7 +43,7 @@ With `lookout-sdk` binary from the latest release of [SDK](https://github.com/sr
 ```
 $ lookout-gometalint
 
-$ lookout-sdk review -v ipv4://localhost:2001 \
+$ lookout-sdk review --log-level=debug ipv4://localhost:2001 \
     --from c99dcdff172f1cb5505603a45d054998cb4dd606 \
     --to 3a9d78bdd1139c929903885ecb8f811931b8aa70
 ```

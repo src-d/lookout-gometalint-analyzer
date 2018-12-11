@@ -36,7 +36,7 @@ jobs:
       script:
         - curl https://raw.githubusercontent.com/src-d/lookout-sdk/master/_tools/install-lookout-latest.sh | bash
         - (./build/lookout-gometalint-analyzer_linux_amd64/gometalint-analyzer 2>&1 | tee -a analyzer.log)&
-        - ./lookout-sdk review -v "ipv4://localhost:2001" --from="86466b69281ca6bdcbc55413014ddb5a5ac4ce50" --to="a044e568d6b3bd6bf5ecf49fdd8c170de53fcb73"
+        - ./lookout-sdk review --log-level=debug "ipv4://localhost:2001" --from="86466b69281ca6bdcbc55413014ddb5a5ac4ce50" --to="a044e568d6b3bd6bf5ecf49fdd8c170de53fcb73"
 
     - name: 'Check deps'
       install:
