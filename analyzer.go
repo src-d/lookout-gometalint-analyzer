@@ -68,12 +68,13 @@ var lintersOptions = map[string]map[string]argumentConstructor{
 func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *pb.ReviewEvent) (
 	*pb.EventResponse, error) {
 	changes, err := a.DataClient.GetChanges(ctx, &pb.ChangesRequest{
-		Head:            &e.Head,
-		Base:            &e.Base,
-		WantContents:    true,
-		WantLanguage:    true,
-		WantUAST:        false,
-		ExcludeVendored: true,
+		Head:             &e.Head,
+		Base:             &e.Base,
+		WantContents:     true,
+		WantLanguage:     true,
+		WantUAST:         false,
+		ExcludeVendored:  true,
+		IncludeLanguages: []string{"go"},
 	})
 	if err != nil {
 		log.Errorf(err, "failed to GetChanges from a DataService")
