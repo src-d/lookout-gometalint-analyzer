@@ -105,7 +105,7 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *pb.ReviewEvent) (
 		}
 
 		file := change.Head
-		if err = tryToSaveTo(file, tmp); err != nil {
+		if err = saveTo(file, tmp); err != nil {
 			log.Errorf(err, "failed to write file %q", file.Path)
 		} else {
 			saved++
@@ -177,10 +177,10 @@ func revertOriginalPathIn(text string, tmp string) string {
 	return strings.Join(words, " ")
 }
 
-// tryToSaveTo saves a file to given dir, preserving it's original path.
+// saveTo saves a file to given dir, preserving it's original path.
 // In case of error it is returned. All files saved this way will
 // be in the root of the same dir.
-func tryToSaveTo(file *pb.File, tmp string) error {
+func saveTo(file *pb.File, tmp string) error {
 	flatPath := flattenPath(file.Path, tmp)
 	return ioutil.WriteFile(flatPath, file.Content, 0644)
 }
