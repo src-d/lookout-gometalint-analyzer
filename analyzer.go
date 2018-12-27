@@ -170,15 +170,13 @@ func revertOriginalPathIn(text string, tmp string) string {
 }
 
 // tryToSaveTo saves a file to given dir, preserving it's original path.
-// It only loggs any errors and does not fail. All files saved this way will
+// In case of error it is returned. All files saved this way will
 // be in the root of the same dir.
-func tryToSaveTo(file *pb.File, tmp string) {
+func tryToSaveTo(file *pb.File, tmp string) error {
 	flatPath := flattenPath(file.Path, tmp)
-	err := ioutil.WriteFile(flatPath, file.Content, 0644)
-	if err != nil {
-		log.Errorf(err, "failed to write a file %q", flatPath)
-	}
+	return ioutil.WriteFile(flatPath, file.Content, 0644)
 }
+
 func (a *Analyzer) NotifyPushEvent(ctx context.Context, e *pb.PushEvent) (*pb.EventResponse, error) {
 	return &pb.EventResponse{}, nil
 }
