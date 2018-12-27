@@ -88,7 +88,7 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *pb.ReviewEvent) (
 	defer os.RemoveAll(tmp)
 	log.Debugf("Saving files to '%s'", tmp)
 
-	saved := 0
+	found, saved := 0, 0
 	for {
 		change, err := changes.Recv()
 		if err == io.EOF {
@@ -104,15 +104,20 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *pb.ReviewEvent) (
 			continue
 		}
 
-		tryToSaveTo(change.Head, tmp)
-		saved++
+		if tryToSaveTo(change.Head, tmp) != nil {
+			saved++
+		}
+		found++
 	}
 
+	if saved < found {
+		log.Warningf("%d/%d Golang files saved. analyzer won't run on non-saved ones", saved, found)
+	}
 	if saved == 0 {
-		log.Debugf("no Golang files found. skip running gometalinter")
+		log.Debugf("no Golang files to work on. skip running gometalinter")
 		return &pb.EventResponse{AnalyzerVersion: a.Version}, nil
 	}
-	log.Debugf("%d Golang files found. running gometalinter", saved)
+	log.Debugf("%d Golang files to work on. running gometalinter", saved)
 
 	withArgs := append(append(a.Args, tmp), a.linterArguments(e.Configuration)...)
 	comments := RunGometalinter(withArgs)
