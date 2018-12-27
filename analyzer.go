@@ -105,11 +105,8 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *pb.ReviewEvent) (
 			continue
 		}
 
-		// analyze only changes in Golang
-		if strings.HasPrefix(strings.ToLower(change.Head.Language), "go") {
-			tryToSaveTo(change.Head, tmp)
-			saved++
-		}
+		tryToSaveTo(change.Head, tmp)
+		saved++
 	}
 
 	if saved == 0 {
