@@ -71,7 +71,6 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *pb.ReviewEvent) (
 		Head:             &e.Head,
 		Base:             &e.Base,
 		WantContents:     true,
-		WantLanguage:     true,
 		WantUAST:         false,
 		ExcludeVendored:  true,
 		IncludeLanguages: []string{"go"},
