@@ -104,7 +104,10 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *pb.ReviewEvent) (
 			continue
 		}
 
-		if tryToSaveTo(change.Head, tmp) != nil {
+		file := change.Head
+		if err = tryToSaveTo(file, tmp); err != nil {
+			log.Errorf(err, "failed to write file %q", file.Path)
+		} else {
 			saved++
 		}
 		found++
