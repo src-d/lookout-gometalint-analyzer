@@ -68,12 +68,12 @@ var lintersOptions = map[string]map[string]argumentConstructor{
 func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *pb.ReviewEvent) (
 	*pb.EventResponse, error) {
 	changes, err := a.DataClient.GetChanges(ctx, &pb.ChangesRequest{
-		Head:            &e.Head,
-		Base:            &e.Base,
-		WantContents:    true,
-		WantLanguage:    true,
-		WantUAST:        false,
-		ExcludeVendored: true,
+		Head:             &e.Head,
+		Base:             &e.Base,
+		WantContents:     true,
+		WantUAST:         false,
+		ExcludeVendored:  true,
+		IncludeLanguages: []string{"go"},
 	})
 	if err != nil {
 		log.Errorf(err, "failed to GetChanges from a DataService")
@@ -88,7 +88,7 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *pb.ReviewEvent) (
 	defer os.RemoveAll(tmp)
 	log.Debugf("Saving files to '%s'", tmp)
 
-	saved := 0
+	found, saved := 0, 0
 	for {
 		change, err := changes.Recv()
 		if err == io.EOF {
@@ -104,18 +104,23 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *pb.ReviewEvent) (
 			continue
 		}
 
-		// analyze only changes in Golang
-		if strings.HasPrefix(strings.ToLower(change.Head.Language), "go") {
-			tryToSaveTo(change.Head, tmp)
+		file := change.Head
+		if err = saveTo(file, tmp); err != nil {
+			log.Errorf(err, "failed to write file %q", file.Path)
+		} else {
 			saved++
 		}
+		found++
 	}
 
+	if saved < found {
+		log.Warningf("%d/%d Golang files saved. analyzer won't run on non-saved ones", saved, found)
+	}
 	if saved == 0 {
-		log.Debugf("no Golang files found. skip running gometalinter")
+		log.Debugf("no Golang files to work on. skip running gometalinter")
 		return &pb.EventResponse{AnalyzerVersion: a.Version}, nil
 	}
-	log.Debugf("%d Golang files found. running gometalinter", saved)
+	log.Debugf("%d Golang files to work on. running gometalinter", saved)
 
 	withArgs := append(append(a.Args, tmp), a.linterArguments(e.Configuration)...)
 	comments := RunGometalinter(withArgs)
@@ -172,16 +177,14 @@ func revertOriginalPathIn(text string, tmp string) string {
 	return strings.Join(words, " ")
 }
 
-// tryToSaveTo saves a file to given dir, preserving it's original path.
-// It only loggs any errors and does not fail. All files saved this way will
+// saveTo saves a file to given dir, preserving it's original path.
+// In case of error it is returned. All files saved this way will
 // be in the root of the same dir.
-func tryToSaveTo(file *pb.File, tmp string) {
+func saveTo(file *pb.File, tmp string) error {
 	flatPath := flattenPath(file.Path, tmp)
-	err := ioutil.WriteFile(flatPath, file.Content, 0644)
-	if err != nil {
-		log.Errorf(err, "failed to write a file %q", flatPath)
-	}
+	return ioutil.WriteFile(flatPath, file.Content, 0644)
 }
+
 func (a *Analyzer) NotifyPushEvent(ctx context.Context, e *pb.PushEvent) (*pb.EventResponse, error) {
 	return &pb.EventResponse{}, nil
 }
