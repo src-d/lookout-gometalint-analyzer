@@ -14,7 +14,8 @@ var (
 	bin         = "gometalinter.v2"
 	defaultArgs = []string{
 		"--disable-all", "--enable=dupl", "--enable=gosec",
-		"--enable=gofmt", "--enable=goimports", "--enable=lll", "--enable=misspell",
+		"--enable=gofmt", "--enable=goimports", "--enable=lll",
+		"--enable=misspell", "--enable=gocyclo",
 	}
 )
 

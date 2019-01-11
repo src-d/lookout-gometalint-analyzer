@@ -16,6 +16,7 @@ skips directory- and package-level checks.  The currently-enabled linters are
 * http://godoc.org/github.com/securego/gosec/cmd/gosec
 * http://godoc.org/github.com/walle/lll/cmd/lll
 * http://godoc.org/golang.org/x/tools/cmd/goimports
+* https://godoc.org/github.com/alecthomas/gocyclo
 
 # Build
 
