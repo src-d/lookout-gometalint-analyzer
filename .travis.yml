@@ -51,7 +51,7 @@ jobs:
       stage: release
       script:
         - PKG_OS=linux make packages
-        - DOCKER_PUSH_LATEST=true make docker-push
+        - make docker-push-latest-release
     - name: 'Deploy to staging'
       stage: deploy
       install:
