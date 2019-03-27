@@ -28,31 +28,31 @@ type Analyzer struct {
 var _ pb.AnalyzerServer = &Analyzer{}
 
 // function to convert pb.types.Value to string argument
-type argumentConstructor func(v *types.Value) string
+type argumentConstructor func(logger log.Logger, v *types.Value) string
 
 // map of linters with options and argument constructors
 var lintersOptions = map[string]map[string]argumentConstructor{
 	"lll": map[string]argumentConstructor{
-		"maxLen": func(v *types.Value) string {
+		"maxLen": func(logger log.Logger, v *types.Value) string {
 			var number int
 
 			switch v.GetKind().(type) {
 			case *types.Value_StringValue:
 				n, err := strconv.Atoi(v.GetStringValue())
 				if err != nil {
-					log.Warningf("wrong type for lll:maxLen argument")
+					logger.Warningf("wrong type for lll:maxLen argument")
 					return ""
 				}
 				number = n
 			case *types.Value_NumberValue:
 				intpart, frac := math.Modf(v.GetNumberValue())
 				if frac != 0 {
-					log.Warningf("wrong type for lll:maxLen argument")
+					logger.Warningf("wrong type for lll:maxLen argument")
 					return ""
 				}
 				number = int(intpart)
 			default:
-				log.Warningf("wrong type for lll:maxLen argument")
+				logger.Warningf("wrong type for lll:maxLen argument")
 				return ""
 			}
 
@@ -67,6 +67,9 @@ var lintersOptions = map[string]map[string]argumentConstructor{
 
 func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *pb.ReviewEvent) (
 	*pb.EventResponse, error) {
+
+	logger := log.With(log.Fields(pb.GetLogFields(ctx)))
+
 	changes, err := a.DataClient.GetChanges(ctx, &pb.ChangesRequest{
 		Head:             &e.Head,
 		Base:             &e.Base,
@@ -76,17 +79,17 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *pb.ReviewEvent) (
 		IncludeLanguages: []string{"go"},
 	})
 	if err != nil {
-		log.Errorf(err, "failed to GetChanges from a DataService")
+		logger.Errorf(err, "failed to GetChanges from a DataService")
 		return nil, err
 	}
 
 	tmp, err := ioutil.TempDir("", "gometalint")
 	if err != nil {
-		log.Errorf(err, "cannot create tmp dir in %s", os.TempDir())
+		logger.Errorf(err, "cannot create tmp dir in %s", os.TempDir())
 		return nil, err
 	}
 	defer os.RemoveAll(tmp)
-	log.Debugf("Saving files to '%s'", tmp)
+	logger.Debugf("Saving files to '%s'", tmp)
 
 	found, saved := 0, 0
 	for {
@@ -96,7 +99,7 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *pb.ReviewEvent) (
 		}
 
 		if err != nil {
-			log.Errorf(err, "failed to get a file from DataServer")
+			logger.Errorf(err, "failed to get a file from DataServer")
 			continue
 		}
 
@@ -106,7 +109,7 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *pb.ReviewEvent) (
 
 		file := change.Head
 		if err = saveTo(file, tmp); err != nil {
-			log.Errorf(err, "failed to write file %q", file.Path)
+			logger.Errorf(err, "failed to write file %q", file.Path)
 		} else {
 			saved++
 		}
@@ -114,15 +117,15 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *pb.ReviewEvent) (
 	}
 
 	if saved < found {
-		log.Warningf("%d/%d Golang files saved. analyzer won't run on non-saved ones", saved, found)
+		logger.Warningf("%d/%d Golang files saved. analyzer won't run on non-saved ones", saved, found)
 	}
 	if saved == 0 {
-		log.Debugf("no Golang files to work on. skip running gometalinter")
+		logger.Debugf("no Golang files to work on. skip running gometalinter")
 		return &pb.EventResponse{AnalyzerVersion: a.Version}, nil
 	}
-	log.Debugf("%d Golang files to work on. running gometalinter", saved)
+	logger.Debugf("%d Golang files to work on. running gometalinter", saved)
 
-	withArgs := append(append(a.Args, tmp), a.linterArguments(e.Configuration)...)
+	withArgs := append(append(a.Args, tmp), a.linterArguments(logger, e.Configuration)...)
 	comments := RunGometalinter(withArgs)
 	var allComments []*pb.Comment
 	for _, comment := range comments {
@@ -134,10 +137,10 @@ func (a *Analyzer) NotifyReviewEvent(ctx context.Context, e *pb.ReviewEvent) (
 			Text: origPathText,
 		}
 		allComments = append(allComments, &newComment)
-		log.Debugf("Get comment %v", newComment)
+		logger.Debugf("Get comment %v", newComment)
 	}
 
-	log.Infof("%d comments created", len(allComments))
+	logger.Infof("%d comments created", len(allComments))
 	return &pb.EventResponse{
 		AnalyzerVersion: a.Version,
 		Comments:        allComments,
@@ -189,7 +192,7 @@ func (a *Analyzer) NotifyPushEvent(ctx context.Context, e *pb.PushEvent) (*pb.Ev
 	return &pb.EventResponse{}, nil
 }
 
-func (a *Analyzer) linterArguments(s types.Struct) []string {
+func (a *Analyzer) linterArguments(logger log.Logger, s types.Struct) []string {
 	config := s.GetFields()
 	if config == nil {
 		return nil
@@ -232,7 +235,7 @@ func (a *Analyzer) linterArguments(s types.Struct) []string {
 		}
 
 		if !correctLinter {
-			log.Warningf("unknown linter %s", name)
+			logger.Warningf("unknown linter %s", name)
 			continue
 		}
 
@@ -243,7 +246,7 @@ func (a *Analyzer) linterArguments(s types.Struct) []string {
 				continue
 			}
 
-			arg := linterOpts[optionName](optV)
+			arg := linterOpts[optionName](logger, optV)
 			if arg != "" {
 				args = append(args, arg)
 			}

@@ -38,6 +38,14 @@
   version = "v1.2.0"
 
 [[projects]]
+  digest = "1:1168584a5881d371e96cb0e66ef6db71d7cef0856cc7f311490bc856627f8328"
+  name = "github.com/grpc-ecosystem/go-grpc-middleware"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "c250d6563d4d4c20252cd865923440e829844f4e"
+  version = "v1.0.0"
+
+[[projects]]
   branch = "master"
   digest = "1:1f251f2f217a800ef952995dac5fbe0615f4cacd0dc448a0dffd9176a09a3823"
   name = "github.com/kami-zh/go-capturer"
@@ -278,12 +286,12 @@
   version = "v1.0.1"
 
 [[projects]]
-  digest = "1:42019efa120ff70fcf7104563f8a3386136c52f0ff61daf3c84708daf3ceb17b"
+  digest = "1:83e268acc352513604378544494a0a21530a6f0e6bd50c071cf3bf2dd0cea528"
   name = "gopkg.in/src-d/lookout-sdk.v0"
   packages = ["pb"]
   pruneopts = "UT"
-  revision = "33a9075b6f4da60610cf1a82959fe18733a97859"
-  version = "v0.3.0"
+  revision = "f3026a04c5fe543d526a444a75a41c4036a0a4c8"
+  version = "v0.6.1"
 
 [solve-meta]
   analyzer-name = "dep"

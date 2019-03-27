@@ -60,10 +60,19 @@ func main() {
 		return
 	}
 
-	conn, err := pb.DialContext(
+	logFn := func(fields pb.Fields, format string, args ...interface{}) {
+		log.With(log.Fields(fields)).Debugf(format, args...)
+	}
+
+	conn, err := pb.DialContextWithInterceptors(
 		context.Background(),
 		grpcAddr,
-		grpc.WithInsecure(),
+		[]grpc.StreamClientInterceptor{
+			pb.LogStreamClientInterceptor(logFn),
+		},
+		[]grpc.UnaryClientInterceptor{
+			pb.LogUnaryClientInterceptor(logFn),
+		},
 		grpc.WithDefaultCallOptions(grpc.FailFast(false)),
 	)
 	if err != nil {
@@ -77,7 +86,14 @@ func main() {
 		Args:       append([]string(nil), os.Args[1:]...),
 	}
 
-	server := grpc.NewServer()
+	server := pb.NewServerWithInterceptors(
+		[]grpc.StreamServerInterceptor{
+			pb.LogStreamServerInterceptor(logFn),
+		},
+		[]grpc.UnaryServerInterceptor{
+			pb.LogUnaryServerInterceptor(logFn),
+		},
+	)
 	pb.RegisterAnalyzerServer(server, analyzer)
 
 	analyzerURL := fmt.Sprintf("ipv4://%s:%d", conf.Host, conf.Port)

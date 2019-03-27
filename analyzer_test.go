@@ -6,8 +6,11 @@ import (
 	types "github.com/gogo/protobuf/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	log "gopkg.in/src-d/go-log.v1"
 	"gopkg.in/src-d/lookout-sdk.v0/pb"
 )
+
+var logger = log.New(nil)
 
 func TestArgsEmpty(t *testing.T) {
 	require := require.New(t)
@@ -52,13 +55,13 @@ func TestArgsEmpty(t *testing.T) {
 
 	a := Analyzer{}
 	for i, input := range inputs {
-		require.Len(a.linterArguments(input), 0, "test case %d; input: %+v", i, input)
+		require.Len(a.linterArguments(logger, input), 0, "test case %d; input: %+v", i, input)
 	}
 }
 
 func TestArgsCorrect(t *testing.T) {
 	a := Analyzer{}
-	require.Equal(t, []string{"--line-length=120"}, a.linterArguments(*pb.ToStruct(map[string]interface{}{
+	require.Equal(t, []string{"--line-length=120"}, a.linterArguments(logger, *pb.ToStruct(map[string]interface{}{
 		"linters": []map[string]interface{}{
 			{
 				"name":   "lll",
@@ -67,7 +70,7 @@ func TestArgsCorrect(t *testing.T) {
 		},
 	})))
 
-	require.Equal(t, []string{"--line-length=120"}, a.linterArguments(*pb.ToStruct(map[string]interface{}{
+	require.Equal(t, []string{"--line-length=120"}, a.linterArguments(logger, *pb.ToStruct(map[string]interface{}{
 		"linters": []map[string]interface{}{
 			{
 				"name":   "lll",
