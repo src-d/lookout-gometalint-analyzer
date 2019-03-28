@@ -1,4 +1,4 @@
-# [![Build Status](https://travis-ci.org/src-d/lookout-gometalint-analyzer.svg)](https://travis-ci.org/src-d/lookout-gometalint-analyzer) lookout analyzer: gometalint
+# [![Build Status](https://travis-ci.com/src-d/lookout-gometalint-analyzer.svg?branch=master)](https://travis-ci.com/src-d/lookout-gometalint-analyzer) lookout analyzer: gometalint
 
 A [lookout](https://github.com/src-d/lookout/) analyzer implementation that
 uses [gometalinter](https://github.com/alecthomas/gometalinter).
